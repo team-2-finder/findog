@@ -5,7 +5,7 @@ use axum::extract::Query;
 use axum::routing::post;
 use axum::{extract::State, http::StatusCode, routing::get, Json, Router};
 use sqlx::postgres::{PgPool, PgPoolOptions};
-use sqlx::{Execute, Pool, Postgres, QueryBuilder};
+use sqlx::{Pool, Postgres, QueryBuilder};
 
 use crate::api::fetch_dogs;
 use crate::entity::{Dogs, Filter};
@@ -99,7 +99,7 @@ async fn dogs(
     Query(filter): Query<Filter>,
     State(pool): State<PgPool>,
 ) -> Result<Json<Vec<Dogs>>, (StatusCode, String)> {
-    let mut query: QueryBuilder<Postgres> = QueryBuilder::new("select * from dogs ");
+    let mut query: QueryBuilder<Postgres> = QueryBuilder::new("select * from dogs where 1=1 ");
 
     if let Some(happen_dt) = &filter.happen_dt {
         query.push(" and happen_dt >= ");
@@ -107,8 +107,8 @@ async fn dogs(
     }
 
     if let Some(kind_cd) = &filter.kind_cd {
-        query.push(" and kind_cd = ");
-        query.push_bind(kind_cd);
+        query.push(" and kind_cd like ");
+        query.push_bind(format!("'%{kind_cd}%'"));
     }
 
     if let Some(sex_cd) = &filter.sex_cd {
@@ -121,7 +121,8 @@ async fn dogs(
         query.push_bind(neuter_yn);
     }
 
-    sqlx::query_as(query.build().sql())
+    query
+        .build_query_as()
         .fetch_all(&pool)
         .await
         .map(Json)
