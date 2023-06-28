@@ -1,11 +1,12 @@
+use std::str::FromStr;
 use std::time::Duration;
 
 use anyhow::Result;
 use axum::extract::Query;
 use axum::routing::post;
 use axum::{extract::State, http::StatusCode, routing::get, Json, Router};
-use sqlx::postgres::{PgPool, PgPoolOptions};
-use sqlx::{Pool, Postgres, QueryBuilder};
+use sqlx::postgres::{PgConnectOptions, PgPool, PgPoolOptions};
+use sqlx::{ConnectOptions, Pool, Postgres, QueryBuilder};
 
 use crate::api::fetch_dogs;
 use crate::entity::{Dogs, Filter};
@@ -24,6 +25,8 @@ fn db_url() -> String {
 
 async fn get_pool() -> Result<Pool<Postgres>> {
     let db_connection_str = db_url();
+    let mut option = PgConnectOptions::from_str(&db_connection_str)?;
+    option.log_statements(log::LevelFilter::Debug);
 
     let retry_count = std::env::var("DB_RETRY")
         .unwrap_or_else(|_| "5".to_string())
@@ -33,7 +36,7 @@ async fn get_pool() -> Result<Pool<Postgres>> {
         if let Ok(pool) = PgPoolOptions::new()
             .max_connections(5)
             .acquire_timeout(Duration::from_secs(3))
-            .connect(&db_connection_str)
+            .connect_with(option.clone())
             .await
         {
             return Ok(pool);
@@ -42,7 +45,8 @@ async fn get_pool() -> Result<Pool<Postgres>> {
 
     Ok(PgPoolOptions::new()
         .max_connections(5)
-        .connect(&db_connection_str)
+        .acquire_timeout(Duration::from_secs(3))
+        .connect_with(option)
         .await?)
 }
 
@@ -60,7 +64,7 @@ fn setup_log() {
 }
 
 pub async fn serve() -> Result<()> {
-    dotenvy::dotenv()?;
+    let _ = dotenvy::dotenv();
     setup_log();
 
     let pool = get_pool().await?;
