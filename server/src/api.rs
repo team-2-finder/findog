@@ -6,7 +6,7 @@ use tokio::io::AsyncWriteExt;
 
 use crate::entity::Dogs;
 
-const URL: &str = "https://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic?bgnde=20211201&4upkind=417000&endde=20231231&_type=json&pageNo=1&numOfRows=1000&serviceKey=";
+const URL: &str = "http://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic?bgnde=20211201&4upkind=417000&endde=20231231&_type=json&pageNo=1&numOfRows=1000&serviceKey=";
 
 async fn put_dog(mut dog: Dogs, pool: Pool<Postgres>, base_path: String) -> Result<()> {
     let image = reqwest::get(&dog.filename).await?;
@@ -16,8 +16,6 @@ async fn put_dog(mut dog: Dogs, pool: Pool<Postgres>, base_path: String) -> Resu
     let mut file = File::create(&path).await?;
     let mut image = image.bytes().await?;
     file.write_all_buf(&mut image).await?;
-
-    tracing::info!("path: {:?}", path);
 
     dog.image_path = Some(path);
 
@@ -61,10 +59,11 @@ pub async fn fetch_dogs(pool: Pool<Postgres>) -> Result<()> {
         .as_array()
         .unwrap();
 
+    tracing::info!("fetching {} results", dogs.len());
+
     let tasks = dogs
         .iter()
         .map(|dog| {
-            tracing::info!("dog: {:?}", dog);
             let dog = serde_json::from_value(dog.clone()).unwrap();
             let pool = pool.clone();
             let base_path = base_path.clone();
@@ -76,6 +75,8 @@ pub async fn fetch_dogs(pool: Pool<Postgres>) -> Result<()> {
     for task in tasks {
         task.await??;
     }
+
+    tracing::info!("done fetching dogs");
 
     Ok(())
 }
