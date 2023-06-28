@@ -53,7 +53,7 @@ pub async fn serve() -> Result<()> {
 
     let pool = get_pool().await?;
 
-    sqlx::query_file!("src/dogs.sql")
+    sqlx::query(include_str!("./dogs.sql"))
         .execute(&pool)
         .await
         .expect("Failed to create table");
