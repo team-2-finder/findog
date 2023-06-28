@@ -10,9 +10,20 @@ use sqlx::{Execute, Pool, Postgres, QueryBuilder};
 use crate::api::fetch_dogs;
 use crate::entity::{Dogs, Filter};
 
+fn db_url() -> String {
+    std::env::var("DATABASE_URL").unwrap_or_else(|_| {
+        let user = std::env::var("DATABASE_USER").unwrap_or_else(|_| "postgres".to_string());
+        let password =
+            std::env::var("DATABASE_PASSWORD").unwrap_or_else(|_| "password".to_string());
+        let host = std::env::var("DATABASE_HOST").unwrap_or_else(|_| "localhost".to_string());
+        let port = std::env::var("DATABASE_PORT").unwrap_or_else(|_| "5432".to_string());
+        let database = std::env::var("DATABASE_DB").unwrap_or_else(|_| "axum_dogs".to_string());
+        format!("postgres://{user}:{password}@{host}:{port}/{database}",)
+    })
+}
+
 async fn get_pool() -> Result<Pool<Postgres>> {
-    let db_connection_str = std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "postgres://postgres:password@localhost".to_string());
+    let db_connection_str = db_url();
 
     let retry_count = std::env::var("DB_RETRY")
         .unwrap_or_else(|_| "5".to_string())
