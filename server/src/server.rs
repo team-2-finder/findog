@@ -4,10 +4,11 @@ use anyhow::Result;
 use axum::extract::Query;
 use axum::routing::post;
 use axum::{extract::State, http::StatusCode, routing::get, Json, Router};
-use chrono::NaiveDate;
-use serde::{Deserialize, Serialize};
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use sqlx::{Execute, Pool, Postgres, QueryBuilder};
+
+use crate::api::fetch_dogs;
+use crate::entity::{Dogs, Filter};
 
 async fn get_pool() -> Result<Pool<Postgres>> {
     let db_connection_str = std::env::var("DATABASE_URL")
@@ -43,7 +44,7 @@ fn make_app(pool: Pool<Postgres>) -> Router {
 
 fn setup_log() {
     tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::DEBUG)
+        .with_max_level(tracing::Level::INFO)
         .init();
 }
 
@@ -57,6 +58,13 @@ pub async fn serve() -> Result<()> {
         .execute(&pool)
         .await
         .expect("Failed to create table");
+
+    let pool_clone = pool.clone();
+    tokio::spawn(async move {
+        if let Err(e) = fetch_dogs(pool_clone).await {
+            tracing::error!("Failed to fetch dogs: {}", e);
+        }
+    });
 
     let app = make_app(pool);
 
@@ -74,63 +82,6 @@ pub async fn serve() -> Result<()> {
         .await?;
 
     Ok(())
-}
-
-mod date_serializer {
-    use chrono::NaiveDate;
-    use serde::{self, Deserialize, Deserializer, Serializer};
-
-    const FORMAT: &str = "%Y-%m-%d";
-
-    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<NaiveDate>, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        if let Ok(s) = String::deserialize(deserializer) {
-            NaiveDate::parse_from_str(&s, FORMAT)
-                .map(Some)
-                .map_err(serde::de::Error::custom)
-        } else {
-            Ok(None)
-        }
-    }
-
-    pub fn serialize<S>(date: &NaiveDate, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let s = format!("{}", date.format(FORMAT));
-        serializer.serialize_str(&s)
-    }
-}
-
-#[derive(Debug, Deserialize)]
-struct Filter {
-    #[serde(default)]
-    #[serde(with = "date_serializer")]
-    happen_dt: Option<NaiveDate>,
-    kind_cd: Option<String>,
-    sex_cd: Option<String>,
-    neuter_yn: Option<String>,
-}
-
-#[derive(Debug, Serialize, sqlx::FromRow)]
-struct Dogs {
-    id: String,
-    #[serde(with = "date_serializer")]
-    happen_dt: NaiveDate,
-    kind_cd: String,
-    color_cd: String,
-    age: i32,
-    weight: i32,
-    sex_cd: String,
-    neuter_yn: String,
-    care_nm: String,
-    care_tel: String,
-    care_addr: String,
-    charge_nm: String,
-    officetel: String,
-    notice_comment: String,
 }
 
 async fn dogs(

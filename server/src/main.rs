@@ -1,5 +1,7 @@
 use anyhow::Result;
 
+mod api;
+mod entity;
 mod server;
 
 #[tokio::main]
