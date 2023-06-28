@@ -18,5 +18,14 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Build Server Dockerfile
-      run: docker build -f server.Dockerfile .
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build, tag, and push image to Amazon ECR
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: false
+        file: server.Dockerfile
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
