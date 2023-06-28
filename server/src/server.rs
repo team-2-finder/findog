@@ -5,14 +5,25 @@ use axum::extract::Query;
 use axum::routing::post;
 use axum::{extract::State, http::StatusCode, routing::get, Json, Router};
 use sqlx::postgres::{PgPool, PgPoolOptions};
-use sqlx::{Execute, Pool, Postgres, QueryBuilder};
+use sqlx::{Pool, Postgres, QueryBuilder};
 
 use crate::api::fetch_dogs;
 use crate::entity::{Dogs, Filter};
 
+fn db_url() -> String {
+    std::env::var("DATABASE_URL").unwrap_or_else(|_| {
+        let user = std::env::var("DATABASE_USER").unwrap_or_else(|_| "postgres".to_string());
+        let password =
+            std::env::var("DATABASE_PASSWORD").unwrap_or_else(|_| "password".to_string());
+        let host = std::env::var("DATABASE_HOST").unwrap_or_else(|_| "localhost".to_string());
+        let port = std::env::var("DATABASE_PORT").unwrap_or_else(|_| "5432".to_string());
+        let database = std::env::var("DATABASE_DB").unwrap_or_else(|_| "axum_dogs".to_string());
+        format!("postgres://{user}:{password}@{host}:{port}/{database}",)
+    })
+}
+
 async fn get_pool() -> Result<Pool<Postgres>> {
-    let db_connection_str = std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "postgres://postgres:password@localhost".to_string());
+    let db_connection_str = db_url();
 
     let retry_count = std::env::var("DB_RETRY")
         .unwrap_or_else(|_| "5".to_string())
@@ -88,7 +99,7 @@ async fn dogs(
     Query(filter): Query<Filter>,
     State(pool): State<PgPool>,
 ) -> Result<Json<Vec<Dogs>>, (StatusCode, String)> {
-    let mut query: QueryBuilder<Postgres> = QueryBuilder::new("select * from dogs ");
+    let mut query: QueryBuilder<Postgres> = QueryBuilder::new("select * from dogs where 1=1 ");
 
     if let Some(happen_dt) = &filter.happen_dt {
         query.push(" and happen_dt >= ");
@@ -96,8 +107,8 @@ async fn dogs(
     }
 
     if let Some(kind_cd) = &filter.kind_cd {
-        query.push(" and kind_cd = ");
-        query.push_bind(kind_cd);
+        query.push(" and kind_cd like ");
+        query.push_bind(format!("'%{kind_cd}%'"));
     }
 
     if let Some(sex_cd) = &filter.sex_cd {
@@ -110,7 +121,8 @@ async fn dogs(
         query.push_bind(neuter_yn);
     }
 
-    sqlx::query_as(query.build().sql())
+    query
+        .build_query_as()
         .fetch_all(&pool)
         .await
         .map(Json)
