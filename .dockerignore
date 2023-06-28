@@ -1,0 +1,8 @@
+server/target/
+
+**/.vscode/
+**/.idea/
+
+**/*.md
+**/*.pdf
+**/.gitignore
