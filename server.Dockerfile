@@ -16,7 +16,13 @@ RUN adduser \
     --uid "${UID}" \
     "${USER}"
 
+COPY server/dummy.rs ./dummy.rs
 COPY server/Cargo.toml ./Cargo.toml
+
+RUN sed -i 's#src/main.rs#dummy.rs#' Cargo.toml
+RUN cargo build --release
+RUN sed -i 's#dummy.rs#src/main.rs#' Cargo.toml
+
 COPY server/src ./src
 
 RUN cargo build --release
