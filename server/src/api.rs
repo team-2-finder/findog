@@ -27,7 +27,7 @@ async fn put_dog(mut dog: Dogs, pool: Pool<Postgres>, base_path: String) -> Resu
                 desertion_no, filename, image_path, happen_dt, kind_cd, color_cd, age, weight, sex_cd, neuter_yn, care_nm, care_tel, care_addr, charge_nm, officetel, notice_comment
             ) values (
                 $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16
-            )"
+            ) on conflict do nothing"
     )
         .bind(&dog.desertion_no)
         .bind(&dog.filename)
