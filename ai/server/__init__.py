@@ -12,4 +12,3 @@ async def read_root():
     """
     sample function
     """
-    pass
