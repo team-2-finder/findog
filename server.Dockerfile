@@ -19,7 +19,7 @@ RUN adduser \
 COPY server/Cargo.toml ./Cargo.toml
 COPY server/src ./src
 
-RUN cargo build --release --features docker
+RUN cargo build --release
 
 FROM debian:buster-slim
 
