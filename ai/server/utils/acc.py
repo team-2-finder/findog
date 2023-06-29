@@ -20,6 +20,7 @@ torch_model = models.resnet50(pretrained=True)
 
 
 def get_hist_acc(img1, img2):
+    print(img1, img2)
     # img1 = cv2.imread(path1)
     imgs = [img1, img2]
     hists = []
