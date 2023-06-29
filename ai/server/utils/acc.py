@@ -75,12 +75,15 @@ def get_transformer_acc(image1, image2):
         return score
     
 
-def get_all_transformer_acc(reference_image, candidate_images):
+def get_all_transformer_acc(reference_image, candidate_image_infos):
     reference_embedding = get_image_embedding(reference_image)
 
     candidate_embeddings = []
-    for candidate_image in candidate_images:
-        candidate_embedding = get_image_embedding(candidate_image)
+    candidate_keys = []
+    for candidate_image_info in candidate_image_infos:
+        masked_image, key = candidate_image_info
+        candidate_keys.append(key)
+        candidate_embedding = get_image_embedding(masked_image)
         candidate_embeddings.append(candidate_embedding)
 
 
@@ -90,7 +93,7 @@ def get_all_transformer_acc(reference_image, candidate_images):
     sorted_indices = np.argsort(percent_similarities)[0][::-1]
     sorted_percent_similarities = percent_similarities[0][sorted_indices]
 
-    sorted_maps = [{'acc': sorted_percent_similarities[i], 'key': candidate_images[indice_index]} for i, indice_index in enumerate(sorted_indices)]
+    sorted_maps = [{'acc': sorted_percent_similarities[i], 'key': candidate_keys[indice_index]} for i, indice_index in enumerate(sorted_indices)]
     
     return sorted_maps
 
