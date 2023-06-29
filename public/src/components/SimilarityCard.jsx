@@ -2,7 +2,17 @@ import styled from "styled-components";
 import { useState } from "react";
 import { MainColor, DetailModal } from "./";
 
-const SimilarityCard = ({ date, kindCd, sexCd, neuterYn, imgUrl }) => {
+const SimilarityCard = ({
+  date,
+  kindCd,
+  sexCd,
+  neuterYn,
+  imgUrl,
+  similar,
+  careNm,
+  careTel,
+  weight,
+}) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const openModal = () => {
@@ -14,12 +24,17 @@ const SimilarityCard = ({ date, kindCd, sexCd, neuterYn, imgUrl }) => {
 
   const [testData, setTestData] = useState({});
   const DataChoice = (info) => {
+    console.log(similar);
     setTestData({
       date: info.date,
       kindCd: info.kindCd,
       sexCd: info.sexCd,
       neuterYn: info.neuterYn,
       imgUrl: info.imgUrl,
+      similar: info.similar,
+      careNm: info.careNm,
+      careTel: info.careTel,
+      weight: info.weight,
     });
   };
   return (
@@ -32,6 +47,10 @@ const SimilarityCard = ({ date, kindCd, sexCd, neuterYn, imgUrl }) => {
             sexCd: sexCd,
             neuterYn: neuterYn,
             imgUrl: imgUrl,
+            similar: similar,
+            careNm: careNm,
+            careTel: careTel,
+            weight: weight,
           });
           openModal();
         }}
@@ -51,7 +70,7 @@ const SimilarityCard = ({ date, kindCd, sexCd, neuterYn, imgUrl }) => {
             </S.TextBox2>
           </S.TextContainer>
         </S.Row>
-        <S.SimilarityBox>사진과 99% 일치해요</S.SimilarityBox>
+        <S.SimilarityBox>사진과 {similar}% 일치해요</S.SimilarityBox>
       </S.Container>
       <DetailModal open={modalOpen} close={closeModal} data={testData} />
     </>
