@@ -6,10 +6,11 @@ import numpy as np
 import torchvision.models as models
 import matplotlib.pylab as plt
 from PIL import Image
-from server.utils.tensors import to_tensors
 from sentence_transformers import SentenceTransformer, util
-from .vision import convert2pill, get_image_embedding
 from sklearn.metrics.pairwise import cosine_similarity
+
+from server.utils.tensors import to_tensors
+from server.utils.vision import convert2pill, get_image_embedding
 
 print("Loading CLIP Model...")
 transformer_model = SentenceTransformer("clip-ViT-B-32")
