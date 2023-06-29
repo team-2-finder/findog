@@ -97,12 +97,12 @@ pub async fn serve() -> Result<()> {
         .await
         .expect("Failed to create table");
 
-    let pool_clone = pool.clone();
-    tokio::spawn(async move {
-        if let Err(e) = fetch_dogs(pool_clone).await {
-            tracing::error!("Failed to fetch dogs: {}", e);
-        }
-    });
+    // let pool_clone = pool.clone();
+    // tokio::spawn(async move {
+    //     if let Err(e) = fetch_dogs(pool_clone).await {
+    //         tracing::error!("Failed to fetch dogs: {}", e);
+    //     }
+    // });
 
     let app = make_app(pool);
 
