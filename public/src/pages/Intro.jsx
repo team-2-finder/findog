@@ -6,42 +6,43 @@ const Intro = () => {
   return (
     <S.Container>
       <S.Titleimg src={Title} alt="title" />
-      <br />
-      <Link to="/inputImage">
-        <S.LinkText src={mainImg} alt="img" />
-      </Link>
+      <S.Row>
+        <Link to="/inputImage">
+          <S.LinkBox src={mainImg} alt="img" />
+        </Link>
 
-      <Link to="/research">
-        <S.LinkText2 src={mainSearch} alt="research" />
-      </Link>
+        <Link to="/research">
+          <S.LinkBox2 src={mainSearch} alt="research" />
+        </Link>
+      </S.Row>
     </S.Container>
   );
 };
 
 const S = {
   Container: styled.div`
+    height: 100vh;
     padding-inline: 120px;
-    padding-top: 5%;
     background-image: url(${bg});
     background-repeat: no-repeat;
     background-size: cover;
-    width: 100%;
+    overflow-x: hidden;
   `,
   Titleimg: styled.img`
-    margin-bottom: 30px;
+    margin-block: 30px;
+  `,
+  Row: styled.div`
+    display: flex;
   `,
 
-  tempArea: styled.div`
-    min-height: 10vh;
-  `,
-  LinkText: styled.img`
+  LinkBox: styled.img`
     cursor: pointer;
     width: 732px;
     height: 464px;
     margin-right: 16px;
   `,
 
-  LinkText2: styled.img`
+  LinkBox2: styled.img`
     cursor: pointer;
     width: 516px;
     height: 464px;
