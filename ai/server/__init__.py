@@ -10,7 +10,7 @@ def download():
     with open(file_path, 'wb') as file:
         file.write(response.content)
         
-app = FastAPI(root_path="/ai")
+
 download()
 
 from typing import List
@@ -24,10 +24,11 @@ from fastapi import FastAPI
 import requests
 import cv2
 
+app = FastAPI(root_path="/ai")
+
 mask_paths = []
 batch_size = 1000
 pre_imgs = []
-
 
 async def get_all_paths() -> List[model.Dogs]:
     async with Database.async_session() as session:
