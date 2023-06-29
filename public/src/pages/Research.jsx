@@ -277,15 +277,14 @@ const S = {
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
-    /* width: 100%; */
   `,
   HeaderBox: styled.div`
     font-size: 48px;
-    padding-top: 12px;
+    padding-top: 24px;
     margin-bottom: 12px;
     font-weight: bold;
     @media screen and (max-width: 393px) {
-      margin-block: 16px;
+      padding-top: 40px;
       font-size: 32px;
     }
   `,
@@ -294,7 +293,6 @@ const S = {
     place-items: center;
     margin: 0 auto;
     grid-template-columns: 1fr 1fr 1fr;
-
     @media screen and (max-width: 393px) {
       grid-template-columns: 1fr;
     }
