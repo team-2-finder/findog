@@ -38,7 +38,7 @@ async def startup():
     paths = [(dog.image_path, dog.desertion_no) for dog in dogs]
     image_paths = [dog.image_path for dog in dogs]
 
-    for i in range(len(paths) / 100):
+    for i in range(len(paths) // 100):
         paths_now = paths[i * 100 : (i + 1) * 100]
         image_paths_now = image_paths[i * 100 : (i + 1) * 100]
         images = get_crops(image_paths_now)
