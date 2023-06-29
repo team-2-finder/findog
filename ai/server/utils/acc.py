@@ -100,7 +100,7 @@ def get_all_transformer_acc(reference_image, candidate_image_infos):
     sorted_indices = np.argsort(percent_similarities)[0][::-1]
     sorted_percent_similarities = percent_similarities[0][sorted_indices]
 
-    sorted_maps = [{'acc': sorted_percent_similarities[i], 'key': candidate_keys[indice_index]} for i, indice_index in enumerate(sorted_indices)]
+    sorted_maps = [{'acc': sorted_percent_similarities[i].item(), 'key': candidate_keys[indice_index]} for i, indice_index in enumerate(sorted_indices)]
     
     return sorted_maps
 
