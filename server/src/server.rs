@@ -9,6 +9,7 @@ use axum::routing::post;
 use axum::{extract::State, http::StatusCode, routing::get, Json, Router};
 use base64::engine::general_purpose;
 use base64::Engine;
+use http::header::CONTENT_TYPE;
 use serde_json::Value;
 use sha2::Digest;
 use sqlx::postgres::{PgConnectOptions, PgPool, PgPoolOptions};
@@ -68,7 +69,7 @@ fn make_app(pool: Pool<Postgres>) -> Router {
             CorsLayer::new()
                 .allow_methods(Any)
                 .allow_origin(Any)
-                .allow_headers(Any)
+                .allow_headers([CONTENT_TYPE])
                 .allow_credentials(false)
         )
         .route("/", get(dogs))
