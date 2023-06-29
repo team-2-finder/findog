@@ -195,6 +195,9 @@ async fn search_image(
     let res = reqwest::get(url).await.map_err(internal_error)?;
     let res = res.text().await.map_err(internal_error)?;
     let value: Value = serde_json::from_str(&res).map_err(internal_error)?;
+    let value = value
+        .get("results")
+        .ok_or_else(|| internal_error(anyhow!("no result")))?;
     let mut value = value
         .as_array()
         .ok_or_else(|| internal_error(anyhow!("no array")))?
