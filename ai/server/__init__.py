@@ -51,7 +51,7 @@ async def read_item(path: str):
 
     for img, key in pre_imgs:
         try:
-            acc = get_hist_acc(masked_input, img)
+            acc = get_hist_acc(cv2.imdecode(masked_input, cv2.IMREAD_UNCHANGED), img)
             res.append({"acc": acc, "key": key})
         except Exception as e:
             print(e)
