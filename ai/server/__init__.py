@@ -1,14 +1,4 @@
-from typing import List
-from sqlalchemy import select
-from server.utils.preprocess import get_crops
-from server.db import Database, model
-from server.utils.acc import get_ensemble_acc, get_all_transformer_acc
-from PIL import Image
-from fastapi import FastAPI
-import requests
-import cv2
 import os
-
 def download():
     pt_url = 'https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt'
     cache_dir = os.path.expanduser('~/.cache/clip')
@@ -22,6 +12,17 @@ def download():
         
 app = FastAPI(root_path="/ai")
 download()
+
+from typing import List
+from sqlalchemy import select
+from server.utils.preprocess import get_crops
+from server.db import Database, model
+
+from server.utils.acc import get_ensemble_acc, get_all_transformer_acc
+from PIL import Image
+from fastapi import FastAPI
+import requests
+import cv2
 
 mask_paths = []
 batch_size = 1000
