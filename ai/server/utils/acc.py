@@ -1,13 +1,15 @@
-import cv2, torch, numpy as np
+import os
+import glob
+import cv2
+import torch
+import numpy as np
 import torchvision.models as models
 import matplotlib.pylab as plt
 from PIL import Image
 from server.utils.tensors import to_tensors
 from sentence_transformers import SentenceTransformer, util
-from PIL import Image
-import glob
-import os
-from .vision import convert2pill
+from .vision import convert2pill, get_image_embedding
+from sklearn.metrics.pairwise import cosine_similarity
 
 print("Loading CLIP Model...")
 transformer_model = SentenceTransformer("clip-ViT-B-32")
@@ -75,8 +77,35 @@ def get_transformer_acc(image1, image2):
     near_duplicates = [image for image in processed_images if image[0] < threshold]
     for score, image_id1, image_id2 in near_duplicates:
         # print("\nScore: {:.3f}%".format(score * 100))
-        return score * 100
+        
+        return score
+    
 
+def get_all_transformer_acc(reference_image, candidate_images):
+    eference_embedding = get_image_embedding(reference_image)
+
+    candidate_embeddings = []
+    for candidate_image in candidate_images:
+        candidate_embedding = get_image_embedding(candidate_image)
+        candidate_embeddings.append(candidate_embedding)
+
+
+    similarities = cosine_similarity([reference_embedding], candidate_embeddings)
+    percent_similarities = (similarities + 1) * 50
+
+    sorted_indices = np.argsort(percent_similarities)[0][::-1]
+    sorted_percent_similarities = percent_similarities[0][sorted_indices]
+
+    sorted_maps = [{'acc': sorted_percent_similarities[i], 'key': candidate_images[indice_index]} for i, indice_index in enumerate(sorted_indices)]
+
+    print(sorted_maps)
+    for m in sorted_maps:
+        print(m['acc'])
+    
+    # for i, index in enumerate(sorted_indices):
+    #     print(f"Rank {i+1}: (Similarity: {sorted_percent_similarities[i]})")
+        
+    return sorted_maps
 
 def get_ensemble_acc(image1, image2):
     # hist_acc = get_hist_acc()
