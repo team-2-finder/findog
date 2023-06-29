@@ -41,9 +41,8 @@ async def get_all_paths() -> List[model.Dogs]:
 @app.get("/acc")
 async def read_item(path: str):
     res = []
-    img_ipt = cv2.imread(path)
     
-    masked_input =get_crops(path)
+    masked_input =get_crops([path])[0]
     # all_transformer_res = get_all_transformer_acc(img_ipt, pre_imgs)
     # print(all_transformer_res)
 
