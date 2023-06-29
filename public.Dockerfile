@@ -11,4 +11,7 @@ COPY public/ .
 
 RUN npm run build
 
-CMD ["npm", "run", "start", "--", "-p", "80"]
+ENV PORT=80
+ENV HOST=0.0.0.0
+
+CMD ["npm", "run", "start"]
