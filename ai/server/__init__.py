@@ -5,7 +5,7 @@ from server.utils.acc import get_hist_acc
 from PIL import Image
 from fastapi import FastAPI
 
-app = FastAPI()
+app = FastAPI(root_path="/ai")
 
 mask_paths = []
 

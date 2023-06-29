@@ -37,8 +37,7 @@ def get_crops(paths):
             min_height = min(min_height, dog_int.shape[1])
             min_width = min(min_width, dog_int.shape[2])
             dog_list.append(dog_int)
-        except Exception as e:
-            print(e)
+        except:
             pass
 
     for i in range(len(dog_list)):
@@ -48,8 +47,6 @@ def get_crops(paths):
 
     model = fcn_resnet50(weights=weights, progress=False)
     model = model.eval()
-
-    print(dog_list)
 
     batch = torch.stack([transform_func(d) for d in dog_list])
     output = model(batch)["out"]
