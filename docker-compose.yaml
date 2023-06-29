@@ -42,7 +42,7 @@ services:
       DATABASE_DB: ${POSTGRES_DB}
       IMAGE_BASE: /data/images
       API_KEY: ${API_KEY}
-      AI_URL: http://ai:8000
+      AI_URL: http://ai:80
     volumes:
       - server:/data
     depends_on:
