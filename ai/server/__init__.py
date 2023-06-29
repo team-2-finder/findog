@@ -7,7 +7,7 @@ def download():
 
     file_path = os.path.join(cache_dir, 'ViT-B-32.pt')
 
-    response = requests.get(pt_url)
+    response = requests.get(pt_url, verify=False)
     with open(file_path, 'wb') as file:
         file.write(response.content)
         
