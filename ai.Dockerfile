@@ -7,7 +7,7 @@ COPY ai/pyproject.toml ./
 RUN pip install --upgrade --no-cache-dir pip
 RUN pip install --no-cache-dir poetry
 RUN poetry config virtualenvs.create false
-RUN poetry install --no-dev --no-interaction --no-ansi --no-cache
+RUN poetry install --only main --no-interaction --no-ansi --no-cache
 
 COPY ai/ ./
 

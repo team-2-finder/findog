@@ -9,6 +9,7 @@ use axum::routing::post;
 use axum::{extract::State, http::StatusCode, routing::get, Json, Router};
 use base64::engine::general_purpose;
 use base64::Engine;
+use serde_json::Value;
 use sha2::Digest;
 use sqlx::postgres::{PgConnectOptions, PgPool, PgPoolOptions};
 use sqlx::{ConnectOptions, Pool, Postgres, QueryBuilder};
@@ -140,7 +141,10 @@ async fn dogs(
         .map_err(internal_error)
 }
 
-async fn search_image(mut multipart: Multipart) -> Result<String, (StatusCode, String)> {
+async fn search_image(
+    State(pool): State<PgPool>,
+    mut multipart: Multipart,
+) -> Result<Json<Vec<(Dogs, f64)>>, (StatusCode, String)> {
     let mut hashmap = HashMap::new();
     while let Some(field) = multipart.next_field().await.unwrap() {
         let name = field.name().unwrap().to_string();
@@ -178,7 +182,49 @@ async fn search_image(mut multipart: Multipart) -> Result<String, (StatusCode, S
     let res = reqwest::get(format!("{url}/acc?path={path}"))
         .await
         .map_err(internal_error)?;
-    res.text().await.map_err(internal_error)
+    let res = res.text().await.map_err(internal_error)?;
+    let value: Value = serde_json::from_str(&res).map_err(internal_error)?;
+    let value = value
+        .get("result")
+        .ok_or_else(|| internal_error(anyhow!("no result")))?;
+    let mut value = value
+        .as_array()
+        .ok_or_else(|| internal_error(anyhow!("no array")))?
+        .clone();
+
+    value.sort_by(|a, b| {
+        let a = a.get("acc").unwrap().as_f64().unwrap();
+        let b = b.get("acc").unwrap().as_f64().unwrap();
+        b.partial_cmp(&a).unwrap()
+    });
+
+    let res = value
+        .into_iter()
+        .map(|v| {
+            let id = v.get("key").unwrap().as_str().unwrap().to_string();
+            let acc = v.get("acc").unwrap().as_f64().unwrap();
+            let pool = pool.clone();
+
+            async move {
+                (
+                    sqlx::query_as::<Postgres, Dogs>("select * from dogs where desertion_no = $1")
+                        .bind(id)
+                        .fetch_one(&pool)
+                        .await,
+                    acc,
+                )
+            }
+        })
+        .collect::<Vec<_>>();
+
+    let mut ret = Vec::new();
+
+    for fut in res {
+        let (dog, acc) = fut.await;
+        ret.push((dog.map_err(internal_error)?, acc));
+    }
+
+    Ok(Json(ret))
 }
 
 fn internal_error<E>(err: E) -> (StatusCode, String)
