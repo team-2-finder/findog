@@ -15,6 +15,7 @@ axum = { version = "0.6", features = ["multipart"] }
 base64 = "0.21.2"
 chrono = "0.4.26"
 dotenvy = "0.15.7"
+http = "0.2.9"
 log = "0.4.19"
 reqwest = "0.11.18"
 regex = "1"
@@ -23,6 +24,6 @@ serde_json = "1.0"
 sha2 = "0.10.7"
 sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "any", "postgres", "chrono"] }
 tokio = { version = "1.0", features = ["full"] }
-tower-http = { version = "0.4.1", features = ["fs", "trace"] }
+tower-http = { version = "0.4.1", features = ["fs", "trace", "cors"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }

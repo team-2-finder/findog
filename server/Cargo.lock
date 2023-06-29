@@ -1445,6 +1445,7 @@ dependencies = [
  "base64 0.21.2",
  "chrono",
  "dotenvy",
+ "http",
  "log",
  "regex",
  "reqwest",

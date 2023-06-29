@@ -9,12 +9,14 @@ use axum::routing::post;
 use axum::{extract::State, http::StatusCode, routing::get, Json, Router};
 use base64::engine::general_purpose;
 use base64::Engine;
+use http::Method;
 use serde_json::Value;
 use sha2::Digest;
 use sqlx::postgres::{PgConnectOptions, PgPool, PgPoolOptions};
 use sqlx::{ConnectOptions, Pool, Postgres, QueryBuilder};
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
+use tower_http::cors::{Any, CorsLayer};
 use tower_http::services::ServeDir;
 
 use crate::api::fetch_dogs;
@@ -63,6 +65,11 @@ fn make_app(pool: Pool<Postgres>) -> Router {
     let base_path = std::env::var("IMAGE_BASE").unwrap_or_else(|_| "./images".to_string());
 
     Router::new()
+        .layer(
+            CorsLayer::new()
+                .allow_methods([Method::GET, Method::POST])
+                .allow_origin(Any),
+        )
         .route("/", get(dogs))
         .route("/upload-image", post(search_image))
         .nest_service("/image", ServeDir::new(base_path))
