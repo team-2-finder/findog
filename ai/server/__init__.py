@@ -32,6 +32,8 @@ async def read_item(path: str):
 
 @app.on_event("startup")
 async def startup():
+    import gc
+
     global mask_paths
     await Database.init()
     dogs = await get_all_paths()
@@ -51,3 +53,5 @@ async def startup():
                 Image.fromarray(image).save(path)
         except Exception as e:
             print(e)
+        
+        gc.collect()
