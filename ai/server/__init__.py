@@ -1,7 +1,8 @@
+from typing import List
 from sqlalchemy import select
 from server.utils.preprocess import get_crops
 from server.db import Database, model
-from server.utils.acc import get_ensemble_acc
+from server.utils.acc import get_ensemble_acc, get_all_transformer_acc
 from PIL import Image
 from fastapi import FastAPI
 import cv2
@@ -13,7 +14,7 @@ batch_size = 1000
 pre_imgs = []
 
 
-async def get_all_paths() -> list[model.Dogs]:
+async def get_all_paths() -> List[model.Dogs]:
     async with Database.async_session() as session:
         stmt = select(model.Dogs)
         result = await session.execute(stmt)
@@ -25,14 +26,16 @@ async def get_all_paths() -> list[model.Dogs]:
 async def read_item(path: str):
     res = []
     img_ipt = cv2.imread(path)
-    for img, key in pre_imgs:
-        try:
-            acc = get_ensemble_acc(img, img_ipt)
-            res.append({"acc": acc, "key": key})
-        except Exception as e:
-            print(e)
-            continue
-    res = sorted(res, key=lambda x: x["acc"], reverse=True)
+    
+    res = get_all_transformer_acc(img_ipt, pre_imgs)
+    # for img, key in pre_imgs:
+    #     try:
+    #         acc = get_ensemble_acc(img, img_ipt)
+    #         res.append({"acc": acc, "key": key})
+    #     except Exception as e:
+    #         print(e)
+    #         continue
+    # res = sorted(res, key=lambda x: x["acc"], reverse=True)
     print(res)
     return {"results": res}
 
