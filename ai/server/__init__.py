@@ -51,7 +51,7 @@ async def read_item(path: str):
 
     for img, key in pre_imgs:
         try:
-            acc = get_ensemble_acc(img, img_ipt)
+            acc = get_hist_acc(img, img_ipt)
             res.append({"acc": acc, "key": key})
         except Exception as e:
             print(e)
