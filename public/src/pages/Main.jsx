@@ -157,6 +157,10 @@ const S = {
     align-items: center;
     width: 100%;
     padding-block: 16px;
+    @media screen and (max-width: 393px) {
+      padding: 0;
+      /* align-items: flex-start; */
+    }
   `,
   Row: styled.div`
     display: flex;
@@ -181,6 +185,8 @@ const S = {
     object-fit: fit;
     @media screen and (max-width: 393px) {
       width: 90%;
+      height: auto;
+      margin-top: 24px;
     }
   `,
 
@@ -196,11 +202,8 @@ const S = {
     position: absolute;
     top: 10px;
     @media screen and (max-width: 393px) {
-      width: 86%;
-      height: 96%;
-      resize: cover;
-      border-radius: 20px;
-      top: 5px;
+      margin-top: 20px;
+      width: 80%;
     }
   `,
   ///
@@ -236,7 +239,7 @@ const S = {
     font-size: 24px;
     font-weight: 700;
     padding-block: 16px;
-    width: 90%;
+    width: 85%;
     text-align: center;
     margin-top: 24px;
     -webkit-tap-highlight-color: transparent;
@@ -250,8 +253,9 @@ const S = {
     font-weight: 700;
     padding-block: 16px;
     margin-top: 24px;
-    width: 90%;
+    width: 85%;
     text-align: center;
+    margin-top: 24px;
     -webkit-tap-highlight-color: transparent;
   `,
 };
