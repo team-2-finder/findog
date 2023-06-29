@@ -31,7 +31,8 @@ const S = {
     width: 500px;
     /* height: 200px; */
     @media screen and (max-width: 393px) {
-      width: 100%;
+      width: 85%;
+      margin-bottom: 45%;
     }
   `,
   Row: styled.div`
@@ -41,6 +42,9 @@ const S = {
     background-color: white;
     border-radius: 20px;
     padding-inline: 50px;
+    @media screen and (max-width: 393px) {
+      padding-inline: 24px;
+    }
   `,
 
   InnerText: styled.p`
