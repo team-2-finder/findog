@@ -2,7 +2,7 @@ import cv2, torch, numpy as np
 import torchvision.models as models
 import matplotlib.pylab as plt
 from PIL import Image
-from tensors import to_tensors
+from server.utils.tensors import to_tensors
 from sentence_transformers import SentenceTransformer, util
 from PIL import Image
 import glob
