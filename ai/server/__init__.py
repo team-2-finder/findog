@@ -26,6 +26,7 @@ async def read_item(path: str):
             res.append({"acc": acc, "key": key})
         except:
             continue
+    res = sorted(res, key=lambda x: x["acc"], reverse=True)
     return {"results": res}
 
 
