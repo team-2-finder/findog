@@ -8,6 +8,7 @@ from fastapi import FastAPI
 app = FastAPI(root_path="/ai")
 
 mask_paths = []
+batch_size = 1000
 
 async def get_all_paths() -> list[model.Dogs]:
     async with Database.async_session() as session:
@@ -40,9 +41,9 @@ async def startup():
     paths = [(dog.image_path, dog.desertion_no) for dog in dogs]
     image_paths = [dog.image_path for dog in dogs]
 
-    for i in range(len(paths) // 100):
-        paths_now = paths[i * 100 : (i + 1) * 100]
-        image_paths_now = image_paths[i * 100 : (i + 1) * 100]
+    for i in range(len(paths) // batch_size):
+        paths_now = paths[i * batch_size : (i + 1) * batch_size]
+        image_paths_now = image_paths[i * batch_size : (i + 1) * batch_size]
         images = get_crops(image_paths_now)
 
         try:
