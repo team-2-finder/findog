@@ -85,7 +85,7 @@ const AnimalCard = ({
 const S = {
   Container: styled.div`
     margin: 10px;
-    width: 400px;
+    width: calc(100% - 20px);
     height: 200px;
     display: flex;
     border-radius: 20px;

@@ -5,16 +5,20 @@ import { Link } from "react-router-dom";
 const Intro = () => {
   return (
     <S.Container>
-      <S.Titleimg src={Title} alt="title" />
-      <S.Row>
-        <Link to="/inputImage">
-          <S.LinkBox src={mainImg} alt="img" />
-        </Link>
+      <S.Main>
+        <S.Titleimg src={Title} alt="title" />
+        <S.Row>
+          <S.Link to="/inputImage">
+            <S.LinkBox src={mainImg} alt="img" />
+          </S.Link>
 
-        <Link to="/research">
-          <S.LinkBox2 src={mainSearch} alt="research" />
-        </Link>
-      </S.Row>
+          <S.Middle />
+
+          <S.Link2 to="/research">
+            <S.LinkBox2 src={mainSearch} alt="research" />
+          </S.Link2>
+        </S.Row>
+      </S.Main>
     </S.Container>
   );
 };
@@ -22,30 +26,43 @@ const Intro = () => {
 const S = {
   Container: styled.div`
     height: 100vh;
-    padding-inline: 120px;
+    width: 100vw;
     background-image: url(${bg});
     background-repeat: no-repeat;
     background-size: cover;
     overflow-x: hidden;
+  `,
+  Main: styled.div`
+    width: 100em;
+    max-width: calc(100vw - 10em);
+    margin: 0 auto;
   `,
   Titleimg: styled.img`
     margin-block: 30px;
   `,
   Row: styled.div`
     display: flex;
+    justify-content: space-between;
   `,
-
+  Link: styled(Link)`
+    flex: 732 516 0;
+  `,
+  Middle: styled.div`
+    flex: 1 0 auto;
+    width: 2em;
+  `,
+  Link2: styled(Link)`
+    flex: 516 732 0;
+  `,
   LinkBox: styled.img`
     cursor: pointer;
-    width: 732px;
-    height: 464px;
-    margin-right: 16px;
+    max-width: 100%;
+    object-fit: contain;
   `,
-
   LinkBox2: styled.img`
     cursor: pointer;
-    width: 516px;
-    height: 464px;
+    max-width: 100%;
+    object-fit: contain;
   `,
 };
 

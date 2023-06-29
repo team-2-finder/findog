@@ -318,6 +318,11 @@ const S = {
     place-items: center;
     margin: 0 auto;
     grid-template-columns: 1fr 1fr 1fr;
+
+    @media screen and (max-width: 1230px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
     @media screen and (max-width: 393px) {
       grid-template-columns: 1fr;
     }

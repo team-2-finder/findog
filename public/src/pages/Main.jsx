@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef  } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { DogInput, MobileDogInput, bg2 } from "../images";
