@@ -45,7 +45,7 @@ async def get_all_paths() -> List[model.Dogs]:
 async def read_item(path: str):
     res = []
     
-    masked_input =get_crops([path])[0]
+    masked_input =get_crops([(path, 1)])[0][0]
     # all_transformer_res = get_all_transformer_acc(img_ipt, pre_imgs)
     # print(all_transformer_res)
 
