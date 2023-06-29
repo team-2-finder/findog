@@ -39,7 +39,7 @@ const Similarity = () => {
                 careNm={res[0].careNm}
                 careTel={res[0].careTel}
                 weight={res[0].weight}
-                similar={Math.ceil(res[1] * 100)}
+                similar={Math.round(res[1])}
               />
             ))}
           </S.AnimalContainer>

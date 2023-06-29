@@ -59,6 +59,7 @@ const S = {
   `,
   img: styled.img`
     width: 80%;
+    height: 80%;
     object-fit: contain;
   `,
 };
