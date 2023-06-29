@@ -1,15 +1,27 @@
+use std::sync::OnceLock;
+
 use anyhow::Result;
+use chrono::Utc;
+use reqwest::header::USER_AGENT;
+use reqwest::Response;
 use sqlx::types::JsonValue;
 use sqlx::{Pool, Postgres};
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
+use tokio::sync::Mutex;
+use tokio::time::sleep;
 
 use crate::entity::Dogs;
 
 const URL: &str = "http://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic?bgnde=20211201&4upkind=417000&endde=20231231&_type=json&pageNo=1&numOfRows=1000&serviceKey=";
 
+fn time() -> &'static Mutex<()> {
+    static TIME: OnceLock<Mutex<()>> = OnceLock::new();
+    TIME.get_or_init(|| Mutex::new(()))
+}
+
 async fn put_dog(mut dog: Dogs, pool: Pool<Postgres>, base_path: String) -> Result<()> {
-    let image = reqwest::get(&dog.filename).await?;
+    let image = get(&dog.filename).await?;
     tokio::fs::create_dir_all(&base_path).await?;
     let ext = dog.filename.split('.').last().unwrap_or("jpg");
     let path = format!("{base_path}/{id}.{ext}", id = dog.desertion_no);
@@ -49,10 +61,18 @@ async fn put_dog(mut dog: Dogs, pool: Pool<Postgres>, base_path: String) -> Resu
     Ok(())
 }
 
+async fn get(url: &str) -> Result<Response> {
+    let _time = time().lock().await;
+    sleep(std::time::Duration::from_millis(50)).await;
+
+    let client = reqwest::Client::new();
+    Ok(client.get(url).header(USER_AGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15").send().await?)
+}
+
 pub async fn fetch_dogs(pool: Pool<Postgres>) -> Result<()> {
     let base_path = std::env::var("IMAGE_BASE").unwrap_or_else(|_| "./images".to_string());
     let key = std::env::var("API_KEY")?;
-    let resp = reqwest::get(format!("{URL}{key}")).await?;
+    let resp = get(&format!("{URL}{key}")).await?;
     let text = resp.text().await?;
     let dogs: JsonValue = serde_json::from_str(&text)?;
     let dogs = dogs["response"]["body"]["items"]["item"]
@@ -73,7 +93,9 @@ pub async fn fetch_dogs(pool: Pool<Postgres>) -> Result<()> {
         .collect::<Vec<_>>();
 
     for task in tasks {
-        task.await??;
+        if let Err(e) = task.await? {
+            tracing::info!("error occurred: {e}");
+        }
     }
 
     tracing::info!("done fetching dogs");
