@@ -124,7 +124,7 @@ async fn dogs(
 
     if let Some(kind_cd) = &filter.kind_cd {
         query.push(" and kind_cd like ");
-        query.push_bind(format!("'%{kind_cd}%'"));
+        query.push_bind(format!("%{kind_cd}%"));
     }
 
     if let Some(sex_cd) = &filter.sex_cd {
