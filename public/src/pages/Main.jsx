@@ -52,6 +52,7 @@ const Main = () => {
     setLoading(true);
     const formData = new FormData();
     formData.append("image", selectedImage);
+    formData.append("filename", selectedImage.name)
 
     axios
       .post("https://findog.buttercrab.net/api/upload-image", formData, {
