@@ -1,4 +1,5 @@
 import os
+import requests
 def download():
     pt_url = 'https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt'
     cache_dir = os.path.expanduser('~/.cache/clip')
@@ -21,7 +22,6 @@ from server.db import Database, model
 from server.utils.acc import get_ensemble_acc, get_all_transformer_acc
 from PIL import Image
 from fastapi import FastAPI
-import requests
 import cv2
 
 app = FastAPI(root_path="/ai")
