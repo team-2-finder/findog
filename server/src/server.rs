@@ -18,6 +18,7 @@ use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::services::ServeDir;
+use tower_http::trace::TraceLayer;
 
 use crate::api::fetch_dogs;
 use crate::entity::{Dogs, Filter};
@@ -76,6 +77,7 @@ fn make_app(pool: Pool<Postgres>) -> Router {
                 .allow_headers([CONTENT_TYPE])
                 .allow_credentials(false)
         )
+        .layer(TraceLayer::new_for_http())
 }
 
 fn setup_log() {
