@@ -1,6 +1,7 @@
 use std::sync::OnceLock;
 
 use anyhow::Result;
+use regex::Regex;
 use reqwest::header::USER_AGENT;
 use reqwest::Response;
 use sqlx::types::JsonValue;
@@ -17,6 +18,11 @@ const URL: &str = "http://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonm
 fn time() -> &'static Mutex<()> {
     static TIME: OnceLock<Mutex<()>> = OnceLock::new();
     TIME.get_or_init(|| Mutex::new(()))
+}
+
+fn regex() -> &'static Regex {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    REGEX.get_or_init(|| Regex::new(r#"_s(\[\d])?"#).unwrap())
 }
 
 async fn put_dog(mut dog: Dogs, pool: Pool<Postgres>, base_path: String) -> Result<()> {
@@ -85,7 +91,7 @@ pub async fn fetch_dogs(pool: Pool<Postgres>) -> Result<()> {
         .filter(|dog| dog.get("kindCd").unwrap().as_str().unwrap().contains('개'))
         .map(|dog| {
             let mut dog: Dogs = serde_json::from_value(dog.clone()).unwrap();
-            dog.filename = dog.filename.replace("_s", "");
+            dog.filename = regex().replace(&dog.filename, "").to_string();
             let pool = pool.clone();
             let base_path = base_path.clone();
 
