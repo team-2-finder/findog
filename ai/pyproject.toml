@@ -16,8 +16,8 @@ fastapi = {extras = ["uvicorn"], version = "^0.98"}
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.17"}
 uvicorn = {extras = ["standard"], version = "^0.22.0"}
 opencv-python = "^4.7.0.72"
-torch = { version = "1.13.1+cpu", source = "pytorch-cpu"}
-torchvision = { version = "0.14.1+cpu", source = "pytorch-cpu"}
+torch = { version = "2", source = "pytorch-cpu"}
+torchvision = { version = "0.15", source = "pytorch-cpu"}
 numpy = "^1.25.0"
 pillow = "^9.5.0"
 matplotlib = "^3.7.1"
