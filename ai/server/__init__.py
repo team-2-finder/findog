@@ -21,8 +21,11 @@ async def get_all_paths() -> list[model.Dogs]:
 async def read_item(path: str):
     res = []
     for (img, key) in mask_paths:
-        acc = get_hist_acc(img, path)
-        res.append({"acc": acc, "key": key})
+        try:
+            acc = get_hist_acc(img, path)
+            res.append({"acc": acc, "key": key})
+        except:
+            continue
     return {"results": res}
 
 
