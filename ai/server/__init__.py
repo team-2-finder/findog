@@ -58,7 +58,7 @@ async def read_item(path: str):
     #         continue
     # res = sorted(res, key=lambda x: x["acc"], reverse=True)
     
-    return {"results": res}
+    return {"results": all_transformer_res}
 
 @app.on_event("startup")
 async def startup():
