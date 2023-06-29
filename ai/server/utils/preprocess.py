@@ -46,9 +46,9 @@ def get_crops(paths):
                     pass
 
             for i in range(len(dog_list)):
-                dog_int = dog_list[i]
+                dog_int = dog_list[i][0]
                 dog_int = F.resize(dog_int, (min_height, min_width))
-                dog_list[i] = dog_int
+                dog_list[i][0] = dog_int
 
             model = fcn_resnet50(weights=weights, progress=False)
             model = model.eval()
