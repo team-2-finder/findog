@@ -23,9 +23,10 @@ async def get_all_paths() -> list[model.Dogs]:
 @app.get("/acc")
 async def read_item(path: str):
     res = []
+    img_ipt = cv2.imread(path)
     for (img, key) in pre_imgs:
         try:
-            acc = get_hist_acc(img, path)
+            acc = get_hist_acc(img, img_ipt)
             res.append({"acc": acc, "key": key})
         except:
             continue

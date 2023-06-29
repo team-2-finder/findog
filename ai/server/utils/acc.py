@@ -2,9 +2,8 @@ import cv2, numpy as np
 import matplotlib.pylab as plt
 
 
-def get_hist_acc(img1, path2):
+def get_hist_acc(img1, img2):
     # img1 = cv2.imread(path1)
-    img2 = cv2.imread(path2)
     imgs = [img1, img2]
     hists = []
     for i, img in enumerate(imgs):
