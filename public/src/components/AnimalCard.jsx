@@ -85,8 +85,8 @@ const AnimalCard = ({
 const S = {
   Container: styled.div`
     margin: 10px;
-    width: 408px;
-    height: 279px;
+    width: 400px;
+    height: 200px;
     display: flex;
     border-radius: 20px;
     align-items: center;
@@ -95,18 +95,18 @@ const S = {
     @media screen and (max-width: 393px) {
       margin: 0;
       margin-bottom: 16px;
-      padding: 8px;
-      width: auto;
-      height: auto;
+      width: 350px;
     }
   `,
   AnimalImg: styled.img`
-    padding: 26px;
     width: 190px;
-    height: 200px;
-    border-radius: 20px;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px 0px 0px 20px;
+    margin-right: 16px;
     @media screen and (max-width: 393px) {
-      padding: 8px 16px 8px 8px;
+      border-radius: 20px 0px 0px 20px;
+      height: 100%;
       width: 150px;
     }
   `,

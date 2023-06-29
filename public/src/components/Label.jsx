@@ -15,7 +15,7 @@ const S = {
   Row: styled.div`
     display: flex;
     margin-bottom: 20px;
-    align-items: center;
+    align-items: flex-end;
     justify-content: left;
   `,
   Container: styled.div`

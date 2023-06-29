@@ -18,15 +18,13 @@ function DetailModal2({ open, close, data }) {
       {open ? (
         <S.Background>
           <S.Container>
-            <div>
-              <S.CloseButton src={closeBtn} onClick={close} />
-            </div>
+            <S.CloseButton src={closeBtn} onClick={close} />
             <S.Row2>
               <S.Row>
-                <S.InModal>
-                  <S.InImg src={data.imgUrl} alt="img" />
-                </S.InModal>
-                <div>
+                <S.InImg src={data.imgUrl} alt="img" />
+                {/* <S.InModal> */}
+                {/* </S.InModal> */}
+                <S.TextBox>
                   <S.HeadText>{data.kindCd}</S.HeadText>
                   <Label
                     text={"접수일"}
@@ -45,7 +43,7 @@ function DetailModal2({ open, close, data }) {
                   />
                   <Label text={"무게"} data={data.weight} />
                   <Label text={"특이사항"} data={data.notice} />
-                </div>
+                </S.TextBox>
               </S.Row>
               <S.SimilarityBox
                 onMouseEnter={handleMouseEnter}
@@ -82,7 +80,10 @@ const S = {
     align-items: center;
   `,
   Container: styled.div`
-    width: 670px;
+    width: 660px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
     z-index: 999;
     top: 20%;
     left: 50%;
@@ -92,30 +93,46 @@ const S = {
     border-radius: 20px;
     @media screen and (max-width: 393px) {
       width: 80%;
+      height: auto;
       padding: 0;
     }
   `,
-  InModal: styled.div`
-    padding-right: 24px;
+
+  TextBox: styled.div`
     @media screen and (max-width: 393px) {
-      padding: 0;
+      padding-inline: 16px;
     }
   `,
+  // InModal: styled.div`
+  //   /* height: auto; */
+  //   /* padding-right: 24px; */
+  //   @media screen and (max-width: 393px) {
+  //     padding: 0;
+  //   }
+  // `,
 
   /* 모달창 내부 X버튼 */
   CloseButton: styled.img`
+    display: flex;
+    align-self: flex-end;
+    width: 5%;
     padding: 8px;
-    float: right;
+    @media screen and (max-width: 393px) {
+      width: 8%;
+    }
   `,
 
   InImg: styled.img`
-    width: 300px;
-    height: 350px;
-    object-fit: cover;
+    width: 350px;
+    height: 90%;
+    padding-right: 32px;
+    padding-left: 32px;
+    margin-bottom: 32px;
+    /* object-fit: cover; */
     @media screen and (max-width: 393px) {
-      margin-top: 8px;
-      width: 280px;
+      width: 100%;
       height: 200px;
+      padding: 0;
     }
   `,
   HeadText: styled.div`
@@ -128,11 +145,11 @@ const S = {
   Row2: styled.div`
     display: flex;
     flex-direction: column;
-    margin-top: 40px;
+    height: 100%;
   `,
   Row: styled.div`
     display: flex;
-    padding-inline: 16px;
+    height: 100%;
     @media screen and (max-width: 393px) {
       flex-direction: column;
     }
@@ -144,15 +161,15 @@ const S = {
     margin-bottom: 20px;
   `,
   SimilarityBox: styled.div`
-    width: 108.5%;
+    width: 100%;
     color: white;
     background-color: ${MainColor};
     font-size: 24px;
     text-align: center;
-    margin-top: 24px;
     padding-block: 16px;
     font-weight: 700;
     border-radius: 0 0 20px 20px;
+    border-top: 1px solid ${MainColor};
     &:hover {
       border-top: 1px solid ${MainColor};
       font-size: 16px;
@@ -160,7 +177,7 @@ const S = {
       color: ${MainColor};
     }
     @media screen and (max-width: 393px) {
-      width: 120%;
+      width: 100%;
     }
   `,
 };
