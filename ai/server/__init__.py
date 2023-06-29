@@ -46,13 +46,13 @@ async def read_item(path: str):
     res = []
     img_ipt = cv2.imread(path)
     
-    masked_input = get_crops([path])[0]
+    masked_input =get_crops(path)
     # all_transformer_res = get_all_transformer_acc(img_ipt, pre_imgs)
     # print(all_transformer_res)
 
     for img, key in pre_imgs:
         try:
-            acc = get_hist_acc(masked_input, img_ipt)
+            acc = get_hist_acc(masked_input, img)
             res.append({"acc": acc, "key": key})
         except Exception as e:
             print(e)
