@@ -82,7 +82,7 @@ fn make_app(pool: Pool<Postgres>) -> Router {
 
 fn setup_log() {
     tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::TRACE)
+        .with_max_level(tracing::Level::INFO)
         .init();
 }
 
