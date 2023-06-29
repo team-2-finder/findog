@@ -37,7 +37,8 @@ def get_crops(paths):
             min_height = min(min_height, dog_int.shape[1])
             min_width = min(min_width, dog_int.shape[2])
             dog_list.append(dog_int)
-        except:
+        except Exception as e:
+            print(e)
             pass
 
     for i in range(len(dog_list)):
