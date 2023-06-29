@@ -8,6 +8,7 @@ import {
   MainColor,
   Loading2,
 } from "../components";
+import { FaFilter } from "react-icons/fa";
 import { bg2 } from "../images";
 import styled from "styled-components";
 
@@ -151,70 +152,84 @@ const Research = () => {
       <>
         {isMobile ? <MHeader /> : <Header />}
         <S.Container>
-          <S.HeaderBox>지금까지 등록된</S.HeaderBox>
-          <S.HeaderBox style={{ display: "inline" }}>
-            강아지 목록이에요.
+          <S.HeaderBox>
+            지금까지 등록된 <br /> 강아지 목록이에요.
           </S.HeaderBox>
-          <S.FilterButton
-            onClick={() => {
-              setIsClick((res) => !res);
-            }}
-          >
-            필터 검색 결과 보기
-          </S.FilterButton>
-          <div style={{ height: "10px" }}></div>
-          <S.Filter>
-            <S.FilterText>접수일</S.FilterText>
-            <S.Select
-              onChange={handleHappenDt}
-              defaultValue={happenDtList[0].label}
-              // value={happenDtSelected}
-            >
-              {happenDtList.map((item, i) => (
-                <option value={item.days} key={i}>
-                  {item.label}
-                </option>
-              ))}
-            </S.Select>
-            <S.FilterText>성별</S.FilterText>
-            <S.Select
-              onChange={handleSexCd}
-              defaultValue={sexCdList[0]}
-              // value={sexSelected}
-            >
-              {sexCdList.map((item, i) => (
-                <option value={item} key={i}>
-                  {item}
-                </option>
-              ))}
-            </S.Select>
-            <S.FilterText>품종</S.FilterText>
-            <S.Select
-              onChange={handleKindCd}
-              defaultValue={kindCdList[0]}
-              // value={kindSelected}
-            >
-              {kindCdList.map((item, i) => (
-                <option value={item} key={i}>
-                  {item}
-                </option>
-              ))}
-            </S.Select>
-            <S.FilterText>중성화여부</S.FilterText>
-            <S.Select
-              onChange={handleNeuterYn}
-              defaultValue={neuterYnList[0]}
-              // value={neuterYnSelected}
-            >
-              {neuterYnList.map((item, i) => (
-                <option value={item} key={i}>
-                  {item}
-                </option>
-              ))}
-            </S.Select>
-          </S.Filter>
-          <div style={{ height: "50px" }}></div>
 
+          {isMobile ? (
+            <>
+              <S.FilterButton2
+                onClick={() => {
+                  setIsClick((res) => !res);
+                }}
+              >
+                <FaFilter />
+              </S.FilterButton2>
+              <div style={{ height: "16px" }}></div>
+            </>
+          ) : (
+            <>
+              <S.FilterButton
+                onClick={() => {
+                  setIsClick((res) => !res);
+                }}
+              >
+                필터 검색 결과 보기
+              </S.FilterButton>
+              <div style={{ height: "10px" }}></div>
+              <S.Filter>
+                <S.FilterText>접수일</S.FilterText>
+                <S.Select
+                  onChange={handleHappenDt}
+                  defaultValue={happenDtList[0].label}
+                  // value={happenDtSelected}
+                >
+                  {happenDtList.map((item, i) => (
+                    <option value={item.days} key={i}>
+                      {item.label}
+                    </option>
+                  ))}
+                </S.Select>
+                <S.FilterText>성별</S.FilterText>
+                <S.Select
+                  onChange={handleSexCd}
+                  defaultValue={sexCdList[0]}
+                  // value={sexSelected}
+                >
+                  {sexCdList.map((item, i) => (
+                    <option value={item} key={i}>
+                      {item}
+                    </option>
+                  ))}
+                </S.Select>
+                <S.FilterText>품종</S.FilterText>
+                <S.Select
+                  onChange={handleKindCd}
+                  defaultValue={kindCdList[0]}
+                  // value={kindSelected}
+                >
+                  {kindCdList.map((item, i) => (
+                    <option value={item} key={i}>
+                      {item}
+                    </option>
+                  ))}
+                </S.Select>
+                <S.FilterText>중성화여부</S.FilterText>
+                <S.Select
+                  onChange={handleNeuterYn}
+                  defaultValue={neuterYnList[0]}
+                  // value={neuterYnSelected}
+                >
+                  {neuterYnList.map((item, i) => (
+                    <option value={item} key={i}>
+                      {item}
+                    </option>
+                  ))}
+                </S.Select>
+              </S.Filter>
+            </>
+          )}
+          <div style={{ height: "48px" }}></div>
           <S.AnimalContainer>
             {list.length > 0
               ? getCurrentPageItems().map((res, i) => (
@@ -307,6 +322,22 @@ const S = {
   FilterButton: styled.div`
     float: right;
     margin-right: 10px;
+    padding: 15px;
+    color: white;
+    background-color: ${MainColor};
+    font-size: 18px;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    &:active {
+      background-color: rgba(255, 185, 65, 0.8);
+    }
+  `,
+
+  FilterButton2: styled.div`
+    float: right;
+    margin-bottom: 24px;
     padding: 15px;
     color: white;
     background-color: ${MainColor};
