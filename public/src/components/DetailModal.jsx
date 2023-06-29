@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { closeBtn } from "../images";
 import { Label } from "./";
 import { MainColor } from "./";
+import { defaultImg } from "../images";
 
 function DetailModal({ open, close, data }) {
   return (
@@ -10,12 +11,18 @@ function DetailModal({ open, close, data }) {
       {open ? (
         <S.Background>
           <S.Container>
-            <div>
+            <div style={{ justifyContent: "flex-end" }}>
               <S.CloseButton src={closeBtn} onClick={close} />
             </div>
             <S.Row>
               <S.InModal>
-                <S.InImg src={data.imgUrl} alt="img" />
+                <S.InImg
+                  src={data.imgUrl}
+                  alt="img"
+                  onError={(e) => {
+                    e.target.src = defaultImg;
+                  }}
+                />
               </S.InModal>
               <div>
                 <S.HeadText>{data.similar}% 일치</S.HeadText>
@@ -40,7 +47,7 @@ function DetailModal({ open, close, data }) {
             </S.Row>
             <S.Row2>
               <Label text={"보호센터"} data={data.careNm} />
-              <div style={{ width: "30px" }}></div>
+
               <Label text={"전화번호"} data={data.careTel} />
             </S.Row2>
           </S.Container>
@@ -63,16 +70,18 @@ const S = {
     align-items: center;
   `,
   Container: styled.div`
-    width: 670px;
+    width: 560px;
     z-index: 999;
+
     top: 20%;
     left: 50%;
     position: absolute;
     transform: translate(-50%, -5%);
     background-color: white;
     border-radius: 20px;
-    padding-left: 16px;
-    padding-block: 16px;
+    padding: 20px 20px 30px 20px;
+    /* padding-left: 16px;
+    padding-block: 16px; */
     @media screen and (max-width: 393px) {
       width: 80%;
       padding: 0;
@@ -88,11 +97,11 @@ const S = {
     color: ${MainColor};
     font-size: 36px;
     font-weight: bold;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
   `,
   /* 모달창 내부 X버튼 */
   CloseButton: styled.img`
-    padding: 8px;
+    /* padding: 8px; */
     float: right;
   `,
 
@@ -107,8 +116,10 @@ const S = {
     }
   `,
   Row: styled.div`
+    clear: both;
     display: flex;
     justify-content: center;
+    /* justify-content: space-around; */
     margin-top: 10px;
     @media screen and (max-width: 393px) {
       padding-inline: 16px;
@@ -117,9 +128,10 @@ const S = {
   `,
   Row2: styled.div`
     display: flex;
-    justify-content: center;
-
-    margin-top: 20px;
+    justify-content: space-around;
+    margin-left: 5px;
+    margin-top: 15px;
+    margin-bottom: -20px;
     @media screen and (max-width: 393px) {
       padding-inline: 16px;
       flex-direction: column;
