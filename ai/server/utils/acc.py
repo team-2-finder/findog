@@ -28,7 +28,7 @@ def get_hist_acc(img1, img2):
         hists.append(hist)
 
     ret = cv2.compareHist(hists[0], hists[1], cv2.HISTCMP_BHATTACHARYYA)
-    return 1 - ret
+    return (1 - ret) * 100
 
 def get_model_acc(img, img2):
     pass
