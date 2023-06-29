@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { MainColor, DetailModal } from "./";
-
+import { defaultImg } from "../images";
 const SimilarityCard = ({
   date,
   kindCd,
@@ -24,7 +24,6 @@ const SimilarityCard = ({
 
   const [testData, setTestData] = useState({});
   const DataChoice = (info) => {
-    console.log(similar);
     setTestData({
       date: info.date,
       kindCd: info.kindCd,
@@ -56,7 +55,12 @@ const SimilarityCard = ({
         }}
       >
         <S.Row>
-          <S.AnimalImg src={imgUrl} />
+          <S.AnimalImg
+            src={imgUrl}
+            onError={(e) => {
+              e.target.src = defaultImg;
+            }}
+          />
           <S.TextContainer>
             <S.TextBox1>접수일</S.TextBox1>
             <S.TextBox2>{date}</S.TextBox2>
