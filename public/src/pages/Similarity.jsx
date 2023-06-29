@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLocation } from "react";
 import axios from "axios";
 import { Header, SimilarityCard, MHeader, MBottomNavBar } from "../components";
 import { bg2 } from "../images";
@@ -6,91 +6,55 @@ import styled from "styled-components";
 import DetailModal from "../components/DetailModal";
 
 const Similarity = () => {
-  // const [list, setList] = useState([]);
-  // async function getData() {
-  //   try {
-  //     const response = await axios.get("ex.url", {
-  //       // params:{
-  //       //  happenDt: 접수일
-  //       //  kindCd: //품종
-  //       //  sexCd: 성별
-  //       //  neuterYn : 중성화 여부
-  //       // }
-  //     });
-  //     console.log(response);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-  // useEffect(() => {
-  //   // getData();
-  // }, []);
+  // const location = useLocation();
+  // const arr = location.arr;
   const isMobile = window.innerWidth <= 393;
   const arr = [
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290706721.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290806405.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290806349.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290806405.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290806405.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290806405.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290706463.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290806405.jpg",
-    },
+    [
+      {
+        desertionNo: "448547202300713",
+        filename:
+          "http://www.animal.go.kr/files/shelter/2023/05/20230629140624.jpg",
+        imagePath: "./images/448547202300713.jpg",
+        happenDt: "20230629",
+        kindCd: "[개] 진도견",
+        colorCd: "흰색",
+        age: "2014(년생)",
+        weight: "14(Kg)",
+        sexCd: "M",
+        neuterYn: "N",
+        careNm: "거창유기동물보호센터",
+        careTel: "055-945-6500",
+        careAddr: "경상남도 거창군 남상면 수남로 1934-12  ",
+        chargeNm: "거창군",
+        officetel: "055-940-8288",
+        noticeComment: null,
+      },
+      0.33293691072407827,
+    ],
+    [
+      {
+        desertionNo: "448567202300905",
+        filename:
+          "http://www.animal.go.kr/files/shelter/2023/05/202306291106887.jpg",
+        imagePath: "./images/448567202300905.jpg",
+        happenDt: "20230629",
+        kindCd: "[개] 믹스견",
+        colorCd: "갈색+검정+흰색",
+        age: "2023(년생)",
+        weight: "3.8(Kg)",
+        sexCd: "F",
+        neuterYn: "N",
+        careNm: "창원유기동물보호소",
+        careTel: "055-225-5701",
+        careAddr:
+          "경상남도 창원시 의창구 창이대로 71 (명서동, 창원시농업기술센터) 축산과",
+        chargeNm: "창원시의창성산구",
+        officetel: "055-225-5701",
+        noticeComment: null,
+      },
+      0.2730709475747689,
+    ],
   ];
 
   return (
@@ -106,11 +70,15 @@ const Similarity = () => {
           {arr.map((res, i) => (
             <SimilarityCard
               key={i}
-              date={res.date}
-              kindCd={res.kindCd}
-              sexCd={res.sexCd}
-              neuterYn={res.neuterYn}
-              imgUrl={res.imgUrl}
+              date={res[0].happenDt}
+              kindCd={res[0].kindCd}
+              sexCd={res[0].sexCd}
+              neuterYn={res[0].neuterYn}
+              imgUrl={res[0].filename}
+              careNm={res[0].careNm}
+              careTel={res[0].careTel}
+              weight={res[0].weight}
+              similar={Math.ceil(res[1] * 100)}
             />
           ))}
         </S.AnimalContainer>

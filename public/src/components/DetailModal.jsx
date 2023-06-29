@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { closeBtn } from "../images";
 import { Label } from "./";
+import { MainColor } from "./";
 
 function DetailModal({ open, close, data }) {
   return (
@@ -17,6 +18,7 @@ function DetailModal({ open, close, data }) {
                 <S.InImg src={data.imgUrl} alt="img" />
               </S.InModal>
               <div>
+                <S.HeadText>{data.similar}% 일치</S.HeadText>
                 <Label
                   text={"접수일"}
                   data={
@@ -36,6 +38,11 @@ function DetailModal({ open, close, data }) {
                 <Label text={"특이사항"} data={data.notice} />
               </div>
             </S.Row>
+            <S.Row2>
+              <Label text={"보호센터"} data={data.careNm} />
+              <div style={{ width: "30px" }}></div>
+              <Label text={"전화번호"} data={data.careTel} />
+            </S.Row2>
           </S.Container>
         </S.Background>
       ) : null}
@@ -77,7 +84,12 @@ const S = {
       padding: 0;
     }
   `,
-
+  HeadText: styled.div`
+    color: ${MainColor};
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  `,
   /* 모달창 내부 X버튼 */
   CloseButton: styled.img`
     padding: 8px;
@@ -96,7 +108,18 @@ const S = {
   `,
   Row: styled.div`
     display: flex;
-    margin-top: 40px;
+    justify-content: center;
+    margin-top: 10px;
+    @media screen and (max-width: 393px) {
+      padding-inline: 16px;
+      flex-direction: column;
+    }
+  `,
+  Row2: styled.div`
+    display: flex;
+    justify-content: center;
+
+    margin-top: 20px;
     @media screen and (max-width: 393px) {
       padding-inline: 16px;
       flex-direction: column;
