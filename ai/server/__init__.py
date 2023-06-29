@@ -34,10 +34,13 @@ async def startup():
     paths = [(dog.image_path, dog.desertion_no) for dog in dogs]
     images = get_crops([dog.image_path for dog in dogs])
 
-    for (path, key) in paths:
-        path = "".join(path.split(".")[:-1])
-        path = f"{path}-mask.jpg"
-        mask_paths.append((path, key))
+    try:
+        for (path, key) in paths:
+            path = "".join(path.split(".")[:-1])
+            path = f"{path}-mask.jpg"
+            mask_paths.append((path, key))
 
-    for ((path, _), image) in zip(mask_paths, images):
-        Image.fromarray(image).save(path)
+        for ((path, _), image) in zip(mask_paths, images):
+            Image.fromarray(image).save(path)
+    except Exception as e:
+        print(e)
