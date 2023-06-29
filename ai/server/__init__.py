@@ -36,15 +36,18 @@ async def startup():
     await Database.init()
     dogs = await get_all_paths()
     paths = [(dog.image_path, dog.desertion_no) for dog in dogs]
-    images = get_crops([dog.image_path for dog in dogs])
+    image_paths = [dog.image_path for dog in dogs]
 
-    try:
-        for (path, key) in paths:
-            path = "".join(path.split(".")[:-1])
-            path = f"{path}-mask.jpg"
-            mask_paths.append((path, key))
+    for i in range(len(paths) / 100):
+        paths_now = paths[i * 100 : (i + 1) * 100]
+        image_paths_now = image_paths[i * 100 : (i + 1) * 100]
+        images = get_crops(image_paths_now)
 
-        for ((path, _), image) in zip(mask_paths, images):
-            Image.fromarray(image).save(path)
-    except Exception as e:
-        print(e)
+        try:
+            for ((path, key), image) in zip(paths_now, images):
+                path = "".join(path.split(".")[:-1])
+                path = f"{path}-mask.jpg"
+                mask_paths.append((path, key))
+                Image.fromarray(image).save(path)
+        except Exception as e:
+            print(e)
