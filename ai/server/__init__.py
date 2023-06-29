@@ -1,13 +1,28 @@
+import os
+def download():
+    pt_url = 'https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt'
+    cache_dir = os.path.expanduser('~/.cache/clip')
+    os.makedirs(cache_dir, exist_ok=True)
+
+    file_path = os.path.join(cache_dir, 'ViT-B-32.pt')
+
+    response = requests.get(pt_url)
+    with open(file_path, 'wb') as file:
+        file.write(response.content)
+        
+app = FastAPI(root_path="/ai")
+download()
+
 from typing import List
 from sqlalchemy import select
 from server.utils.preprocess import get_crops
 from server.db import Database, model
+
 from server.utils.acc import get_ensemble_acc, get_all_transformer_acc
 from PIL import Image
 from fastapi import FastAPI
+import requests
 import cv2
-
-app = FastAPI(root_path="/ai")
 
 mask_paths = []
 batch_size = 1000
@@ -27,7 +42,9 @@ async def read_item(path: str):
     res = []
     img_ipt = cv2.imread(path)
     
-    res = get_all_transformer_acc(img_ipt, pre_imgs)
+    all_transformer_res = get_all_transformer_acc(img_ipt, pre_imgs)
+    print(all_transformer_res)
+    
     # for img, key in pre_imgs:
     #     try:
     #         acc = get_ensemble_acc(img, img_ipt)
@@ -36,8 +53,39 @@ async def read_item(path: str):
     #         print(e)
     #         continue
     # res = sorted(res, key=lambda x: x["acc"], reverse=True)
-    print(res)
+    
     return {"results": res}
+
+@app.get("/acc")
+async def read_item(path: str):
+    res = []
+    img_ipt = cv2.imread(path)
+
+    all_transformer_res = get_all_transformer_acc(img_ipt, pre_imgs)
+    print(all_transformer_res)
+
+    acc_sum = {}
+    acc_count = {}
+
+    for item in all_transformer_res:
+        acc = item['acc']
+        key = item['key']
+
+        if key not in acc_sum:
+            acc_sum[key] = 0.0
+            acc_count[key] = 0
+
+        acc_sum[key] += acc
+        acc_count[key] += 1
+
+    for key in acc_sum:
+        avg_acc = acc_sum[key] / acc_count[key]
+        res.append({"acc": avg_acc, "key": key})
+
+    res = sorted(res, key=lambda x: x["acc"], reverse=True)
+    
+    return {"results": res}
+
 
 
 @app.on_event("startup")

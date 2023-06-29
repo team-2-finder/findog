@@ -5,10 +5,11 @@ import cv2
 from PIL import Image
 import clip
 from sklearn.metrics.pairwise import cosine_similarity
-
+import os
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model, preprocess = clip.load('ViT-B/32', device=device)
+
+model, preprocess = clip.load('~/.cache/clip/ViT-B-32.pt', device=device)
 
 from PIL import Image
 def convert2pill(image):
