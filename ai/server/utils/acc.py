@@ -9,11 +9,12 @@ import glob
 import os
 from .vision import convert2pill
 
-print('Loading CLIP Model...')
-transformer_model = SentenceTransformer('clip-ViT-B-32')
+print("Loading CLIP Model...")
+transformer_model = SentenceTransformer("clip-ViT-B-32")
 
 
 torch_model = models.resnet50(pretrained=True)
+
 
 def get_hist_acc(img1, img2):
     # img1 = cv2.imread(path1)
@@ -28,8 +29,10 @@ def get_hist_acc(img1, img2):
     ret = cv2.compareHist(hists[0], hists[1], cv2.HISTCMP_BHATTACHARYYA)
     return 1 - ret
 
+
 def get_model_acc(img, img2):
     pass
+
 
 def get_torch_acc(masked_image1, masked_image2):
     torch_model.eval()
@@ -37,11 +40,11 @@ def get_torch_acc(masked_image1, masked_image2):
     with torch.no_grad():
         im = Image.fromarray(masked_image1)
         im.save("masked_image1.jpeg")
-        
+
         im = Image.fromarray(masked_image2)
         im.save("masked_image2.jpeg")
-        
-        print('==================')
+
+        print("==================")
         masked_image1 = to_tensors(masked_image1)
         masked_image2 = to_tensors(masked_image2)
 
@@ -50,7 +53,7 @@ def get_torch_acc(masked_image1, masked_image2):
 
         features1 = torch_model(torch.unsqueeze(masked_image1, 0).float())
         features2 = torch_model(torch.unsqueeze(masked_image2, 0).float())
-        
+
         features1_norm = torch.nn.functional.normalize(features1, p=2, dim=1)
         features2_norm = torch.nn.functional.normalize(features2, p=2, dim=1)
         cosine_similarity = torch.mm(features1_norm, features2_norm.t())
@@ -64,16 +67,18 @@ def get_torch_acc(masked_image1, masked_image2):
 def get_transformer_acc(image1, image2):
     image1 = convert2pill(image1)
     image2 = convert2pill(image2)
-    encoded_image = transformer_model.encode([image1, image2], batch_size=128, convert_to_tensor=True, show_progress_bar=True)
+    encoded_image = transformer_model.encode(
+        [image1, image2], batch_size=128, convert_to_tensor=True, show_progress_bar=True
+    )
     processed_images = util.paraphrase_mining_embeddings(encoded_image)
     threshold = 0.99
     near_duplicates = [image for image in processed_images if image[0] < threshold]
     for score, image_id1, image_id2 in near_duplicates:
         # print("\nScore: {:.3f}%".format(score * 100))
         return score * 100
-    
 
-def  get_ensemble_acc(image1, image2):
+
+def get_ensemble_acc(image1, image2):
     # hist_acc = get_hist_acc()
     transformer_acc = get_transformer_acc(image1, image2)
     return transformer_acc
