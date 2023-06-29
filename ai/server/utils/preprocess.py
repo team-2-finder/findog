@@ -48,6 +48,8 @@ def get_crops(paths):
     model = fcn_resnet50(weights=weights, progress=False)
     model = model.eval()
 
+    print(dog_list)
+
     batch = torch.stack([transform_func(d) for d in dog_list])
     output = model(batch)["out"]
     # print(output.shape, output.min().item(), output.max().item())
