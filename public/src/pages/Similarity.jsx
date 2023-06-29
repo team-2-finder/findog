@@ -95,6 +95,7 @@ const S = {
     left: 35%;
     width: 30%;
     height: 30%;
+    object-fit: contain;
   `,
   NoItemText: styled.img`
     position: absolute;
@@ -102,6 +103,7 @@ const S = {
     left: 35%;
     width: 30%;
     height: 30%;
+    object-fit: contain;
   `,
   BackButton: styled.div`
     width: 500px;

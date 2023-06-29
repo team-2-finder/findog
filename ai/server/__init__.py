@@ -68,15 +68,13 @@ async def startup():
     await Database.init()
     dogs = await get_all_paths()
     paths = [(dog.image_path, dog.desertion_no) for dog in dogs]
-    image_paths = [dog.image_path for dog in dogs]
 
     for i in range(len(paths) // batch_size + 1):
         paths_now = paths[i * batch_size : (i + 1) * batch_size]
-        image_paths_now = image_paths[i * batch_size : (i + 1) * batch_size]
-        images = get_crops(image_paths_now)
+        images = get_crops(paths_now)
 
         try:
-            for (path, key), image in zip(paths_now, images):
+            for image, (path, key) in images:
                 path = ".".join(path.split(".")[:-1])
                 path = f"{path}-mask.jpg"
                 mask_paths.append((path, key))

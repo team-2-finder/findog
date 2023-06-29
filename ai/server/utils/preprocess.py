@@ -33,12 +33,12 @@ def get_crops(paths):
 
             dog_list = []
             cnt = 0
-            for path in paths:
+            for path, key in paths:
                 try:
                     dog_int = read_image(path)
                     min_height = min(min_height, dog_int.shape[1])
                     min_width = min(min_width, dog_int.shape[2])
-                    dog_list.append(dog_int)
+                    dog_list.append((dog_int, (path, key)))
                     cnt += 1
                     if cnt == 200:
                         break
@@ -53,7 +53,7 @@ def get_crops(paths):
             model = fcn_resnet50(weights=weights, progress=False)
             model = model.eval()
 
-            batch = torch.stack([transform_func(d) for d in dog_list])
+            batch = torch.stack([transform_func(d) for d, _ in dog_list])
             output = model(batch)["out"]
             print(output.shape, output.min().item(), output.max().item())
 
@@ -69,7 +69,7 @@ def get_crops(paths):
 
             masked_imgs = []
 
-            for idx, (dog_img, dog_mask) in enumerate(zip(dog_list, dog_masks)):
+            for idx, ((dog_img, key), dog_mask) in enumerate(zip(dog_list, dog_masks)):
                 np_img = dog_img.numpy()
                 np_mask = dog_mask.detach().numpy()
 
@@ -85,7 +85,7 @@ def get_crops(paths):
                     masked_img, (1, 2, 0)
                 )  # Convert shape to (H, W, C)
 
-                masked_imgs.append(np_masked)
+                masked_imgs.append((np_masked, key))
 
             return masked_imgs
     except Exception as e:
