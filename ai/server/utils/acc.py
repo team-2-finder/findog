@@ -68,7 +68,12 @@ def get_transformer_acc(image1, image2):
     processed_images = util.paraphrase_mining_embeddings(encoded_image)
     threshold = 0.99
     near_duplicates = [image for image in processed_images if image[0] < threshold]
-
     for score, image_id1, image_id2 in near_duplicates:
         # print("\nScore: {:.3f}%".format(score * 100))
         return score * 100
+    
+
+def  get_ensemble_acc(image1, image2):
+    # hist_acc = get_hist_acc()
+    transformer_acc = get_transformer_acc(image1, image2)
+    return transformer_acc
