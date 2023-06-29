@@ -13,5 +13,7 @@ RUN npm run build
 
 ENV PORT=80
 ENV HOST=0.0.0.0
+ENV PUBLIC_URL=https://findog.buttercrab.net
+ENV REACT_APP_PUBLIC_URL=https://findog.buttercrab.net
 
 CMD ["npm", "run", "start"]
