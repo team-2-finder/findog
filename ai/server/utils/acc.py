@@ -76,7 +76,7 @@ def get_transformer_acc(image1, image2):
     
 
 def get_all_transformer_acc(reference_image, candidate_images):
-    eference_embedding = get_image_embedding(reference_image)
+    reference_embedding = get_image_embedding(reference_image)
 
     candidate_embeddings = []
     for candidate_image in candidate_images:
