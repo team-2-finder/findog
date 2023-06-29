@@ -14,6 +14,8 @@ import bg from "./bg.svg";
 import bg2 from "./bg2.svg";
 import mainImg from "./mainImg.svg";
 import mainSearch from "./mainSearch.svg";
+import noItem from "./noItem.svg";
+import noItemText from "./noItemText.svg";
 export {
   mainSearch,
   mainImg,
@@ -31,4 +33,6 @@ export {
   mgoImg,
   closeBtn,
   defaultImg,
+  noItem,
+  noItemText,
 };

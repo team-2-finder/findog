@@ -10,6 +10,7 @@ import {
 } from "../components";
 import { bg2 } from "../images";
 import styled from "styled-components";
+import { noItem, noItemText } from "../images";
 
 const Research = () => {
   const [list, setList] = useState([]);
@@ -88,6 +89,9 @@ const Research = () => {
   }, [currentPage]);
 
   const goToNextPage = () => {
+    if (currentPage > totalPages - 1) {
+      return;
+    }
     setCurrentPage((prevPage) => prevPage + 1);
   };
 
@@ -216,23 +220,29 @@ const Research = () => {
           <div style={{ height: "50px" }}></div>
 
           <S.AnimalContainer>
-            {list.length > 0
-              ? getCurrentPageItems().map((res, i) => (
-                  <AnimalCard
-                    key={i}
-                    date={res.happenDt}
-                    kindCd={res.kindCd}
-                    sexCd={res.sexCd}
-                    neuterYn={res.neuterYn}
-                    imgUrl={res.filename}
-                    notice={res.noticeComment}
-                    colorCd={res.colorCd}
-                    caretel={res.careTel}
-                    weight={res.weight}
-                    careNm={res.careNm}
-                  />
-                ))
-              : "로딩중"}
+            {list.length > 0 ? (
+              getCurrentPageItems().map((res, i) => (
+                <AnimalCard
+                  key={i}
+                  date={res.happenDt}
+                  kindCd={res.kindCd}
+                  sexCd={res.sexCd}
+                  neuterYn={res.neuterYn}
+                  imgUrl={res.filename}
+                  notice={res.noticeComment}
+                  colorCd={res.colorCd}
+                  caretel={res.careTel}
+                  weight={res.weight}
+                  careNm={res.careNm}
+                />
+              ))
+            ) : (
+              <>
+                {" "}
+                <S.NoItem src={noItem} />
+                <S.NoItemText src={noItemText} />
+              </>
+            )}
           </S.AnimalContainer>
 
           <S.Pagenation>
@@ -344,6 +354,20 @@ const S = {
     width: 80px;
     height: 60px;
     cursor: pointer;
+  `,
+  NoItem: styled.img`
+    position: absolute;
+    top: 40%;
+    left: 35%;
+    width: 30%;
+    height: 30%;
+  `,
+  NoItemText: styled.img`
+    position: absolute;
+    top: 55%;
+    left: 35%;
+    width: 30%;
+    height: 30%;
   `,
 };
 
