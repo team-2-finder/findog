@@ -13,6 +13,8 @@ import {
 import axios from "axios";
 
 const Main = () => {
+  const isMobile = window.innerWidth <= 393;
+
   const [selectedImage, setSelectedImage] = useState(null); //이미지 선택 저장
   const [imgBase64, setImgBase64] = useState(""); // 파일 base64
   const inputREF = useRef(); //요소 선택 저장
@@ -31,12 +33,8 @@ const Main = () => {
       setSelectedImage(e.target.files[0]); // 파일 상태 업데이트
     }
   };
-  const isMobile = window.innerWidth <= 393;
-  const [isLoading, setLoading] = useState();
 
-  useEffect(() => {
-    console.log("test", selectedImage);
-  }, [selectedImage]);
+  const [isLoading, setLoading] = useState();
 
   //임시 타이머
   // const navigate = useNavigate();
@@ -52,7 +50,7 @@ const Main = () => {
     setLoading(true);
     const formData = new FormData();
     formData.append("image", selectedImage);
-    formData.append("filename", selectedImage.name)
+    formData.append("filename", selectedImage.name);
 
     axios
       .post("https://findog.buttercrab.net/api/upload-image", formData, {
@@ -62,13 +60,18 @@ const Main = () => {
       })
       .then((response) => {
         // 업로드 성공 후에 수행할 작업
+        // console.log(response);
         setLoading(false);
-        navigate("/similarity");
+
+        setTimeout(() => {
+          navigate("/similarity", { state: { arr: response.data } });
+        }, 2000);
+
       })
       .catch((error) => {
         // 업로드 실패 시에 수행할 작업
         setLoading(false);
-        console.error("Upload failed:", error);
+        console.error("어Upload failed:", error);
       });
   };
   return (
@@ -149,6 +152,7 @@ const S = {
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
+    overflow-x: hidden;
   `,
   Container2: styled.div`
     display: flex;
@@ -156,6 +160,10 @@ const S = {
     align-items: center;
     width: 100%;
     padding-block: 16px;
+    @media screen and (max-width: 393px) {
+      padding: 0;
+      /* align-items: flex-start; */
+    }
   `,
   Row: styled.div`
     display: flex;
@@ -176,15 +184,18 @@ const S = {
     display: none;
   `,
   UploadBeforeImg: styled.img`
-    width: 100%;
+    height: 70vh;
+    object-fit: fit;
     @media screen and (max-width: 393px) {
       width: 90%;
+      height: auto;
+      margin-top: 24px;
     }
   `,
 
   UploadAfterImg: styled.img`
-    width: 50%;
-    height: 90%;
+    width: 40%;
+    height: 85%;
     border-radius: 40px;
     object-fit: contain;
     background-color: white;
@@ -194,11 +205,8 @@ const S = {
     position: absolute;
     top: 10px;
     @media screen and (max-width: 393px) {
-      width: 86%;
-      height: 96%;
-      resize: cover;
-      border-radius: 20px;
-      top: 5px;
+      margin-top: 20px;
+      width: 80%;
     }
   `,
   ///
@@ -208,7 +216,7 @@ const S = {
     color: white;
     font-size: 24px;
     font-weight: 700;
-    padding: 24.5px 257px;
+    padding: 24.5px 200px;
     text-align: center;
 
     -webkit-tap-highlight-color: transparent;
@@ -220,7 +228,7 @@ const S = {
     color: white;
     font-size: 24px;
     font-weight: 700;
-    padding: 24.5px 257px;
+    padding: 24.5px 200px;
     text-align: center;
     margin-bottom: 20px;
     -webkit-tap-highlight-color: transparent;
@@ -234,7 +242,7 @@ const S = {
     font-size: 24px;
     font-weight: 700;
     padding-block: 16px;
-    width: 90%;
+    width: 85%;
     text-align: center;
     margin-top: 24px;
     -webkit-tap-highlight-color: transparent;
@@ -248,8 +256,9 @@ const S = {
     font-weight: 700;
     padding-block: 16px;
     margin-top: 24px;
-    width: 90%;
+    width: 85%;
     text-align: center;
+    margin-top: 24px;
     -webkit-tap-highlight-color: transparent;
   `,
 };

@@ -1,5 +1,0 @@
-[[redirects]]
-  from = "/proxy/*"
-  to = "https://findog.buttercrab.net/:splat"
-  status = 200
-  force = true

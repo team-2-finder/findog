@@ -81,7 +81,8 @@ const Header = () => {
 const S = {
   container: styled.div`
     display: flex;
-    position: sticky;
+    position: static;
+    width: 100%;
     top: 0;
     padding-block: 13px;
     flex: 1;

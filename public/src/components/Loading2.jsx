@@ -2,12 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { loading } from "../images";
 
-const Loading = () => {
+const Loading2 = () => {
   return (
     <S.Container>
       <S.SubArea>
         <S.Row>
-          <S.InnerText>사진과 유사한 강아지들을 찾는 중이에요...</S.InnerText>
           <S.img src={loading} alt="loading" />
         </S.Row>
       </S.SubArea>
@@ -18,7 +17,7 @@ const Loading = () => {
 const S = {
   Container: styled.div`
     position: fixed;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: white;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -62,4 +61,4 @@ const S = {
   `,
 };
 
-export default Loading;
+export default Loading2;

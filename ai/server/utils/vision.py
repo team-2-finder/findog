@@ -21,4 +21,4 @@ def get_image_embedding(image):
     image = preprocess(image).unsqueeze(0).to(device)
     with torch.no_grad():
         image_embedding = model.encode_image(image)
-    return image_embedding.cpu().numpy().flatten()  # Flatten the embedding
+    return image_embedding.cpu().numpy().flatten()
