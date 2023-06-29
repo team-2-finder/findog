@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from server.utils.preprocess import get_crops
 from server.db import Database, model
-from server.utils.acc import get_hist_acc
+from server.utils.acc import get_ensemble_acc
 from PIL import Image
 from fastapi import FastAPI
 import cv2
@@ -27,7 +27,7 @@ async def read_item(path: str):
     img_ipt = cv2.imread(path)
     for img, key in pre_imgs:
         try:
-            acc = get_hist_acc(img, img_ipt)
+            acc = get_ensemble_acc(img, img_ipt)
             res.append({"acc": acc, "key": key})
         except Exception as e:
             print(e)

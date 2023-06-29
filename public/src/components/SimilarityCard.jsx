@@ -1,8 +1,18 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { MainColor, DetailModal } from "./";
-
-const SimilarityCard = ({ date, kindCd, sexCd, neuterYn, imgUrl }) => {
+import { defaultImg } from "../images";
+const SimilarityCard = ({
+  date,
+  kindCd,
+  sexCd,
+  neuterYn,
+  imgUrl,
+  similar,
+  careNm,
+  careTel,
+  weight,
+}) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const openModal = () => {
@@ -20,6 +30,10 @@ const SimilarityCard = ({ date, kindCd, sexCd, neuterYn, imgUrl }) => {
       sexCd: info.sexCd,
       neuterYn: info.neuterYn,
       imgUrl: info.imgUrl,
+      similar: info.similar,
+      careNm: info.careNm,
+      careTel: info.careTel,
+      weight: info.weight,
     });
   };
   return (
@@ -32,12 +46,21 @@ const SimilarityCard = ({ date, kindCd, sexCd, neuterYn, imgUrl }) => {
             sexCd: sexCd,
             neuterYn: neuterYn,
             imgUrl: imgUrl,
+            similar: similar,
+            careNm: careNm,
+            careTel: careTel,
+            weight: weight,
           });
           openModal();
         }}
       >
         <S.Row>
-          <S.AnimalImg src={imgUrl} />
+          <S.AnimalImg
+            src={imgUrl}
+            onError={(e) => {
+              e.target.src = defaultImg;
+            }}
+          />
           <S.TextContainer>
             <S.TextBox1>접수일</S.TextBox1>
             <S.TextBox2>{date}</S.TextBox2>
@@ -51,7 +74,7 @@ const SimilarityCard = ({ date, kindCd, sexCd, neuterYn, imgUrl }) => {
             </S.TextBox2>
           </S.TextContainer>
         </S.Row>
-        <S.SimilarityBox>사진과 99% 일치해요</S.SimilarityBox>
+        <S.SimilarityBox>사진과 {similar}% 일치해요</S.SimilarityBox>
       </S.Container>
       <DetailModal open={modalOpen} close={closeModal} data={testData} />
     </>

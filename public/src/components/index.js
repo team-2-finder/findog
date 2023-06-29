@@ -10,6 +10,7 @@ import Label from "./Label";
 import DetailModal from "./DetailModal";
 import DetailModal2 from "./DetailModal2";
 import MBottomNavBar from "./MBottomNavBar";
+
 export {
   Header,
   MainColor,

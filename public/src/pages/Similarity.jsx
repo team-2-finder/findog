@@ -1,97 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 import { Header, SimilarityCard, MHeader, MBottomNavBar } from "../components";
 import { bg2 } from "../images";
 import styled from "styled-components";
 import DetailModal from "../components/DetailModal";
 
 const Similarity = () => {
-  // const [list, setList] = useState([]);
-  // async function getData() {
-  //   try {
-  //     const response = await axios.get("ex.url", {
-  //       // params:{
-  //       //  happenDt: 접수일
-  //       //  kindCd: //품종
-  //       //  sexCd: 성별
-  //       //  neuterYn : 중성화 여부
-  //       // }
-  //     });
-  //     console.log(response);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-  // useEffect(() => {
-  //   // getData();
-  // }, []);
+  const location = useLocation();
+  const arr = location.state.arr;
   const isMobile = window.innerWidth <= 393;
-  const arr = [
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290706721.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290806405.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290806349.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290806405.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290806405.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290806405.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290706463.jpg",
-    },
-    {
-      date: "2023/06/23",
-      kindCd: "골든 리트리버",
-      sexCd: "M",
-      neuterYn: "Y",
-      imgUrl:
-        "http://www.animal.go.kr/files/shelter/2023/05/202306290806405.jpg",
-    },
-  ];
 
   return (
     <>
@@ -106,11 +24,15 @@ const Similarity = () => {
           {arr.map((res, i) => (
             <SimilarityCard
               key={i}
-              date={res.date}
-              kindCd={res.kindCd}
-              sexCd={res.sexCd}
-              neuterYn={res.neuterYn}
-              imgUrl={res.imgUrl}
+              date={res[0].happenDt}
+              kindCd={res[0].kindCd}
+              sexCd={res[0].sexCd}
+              neuterYn={res[0].neuterYn}
+              imgUrl={res[0].filename}
+              careNm={res[0].careNm}
+              careTel={res[0].careTel}
+              weight={res[0].weight}
+              similar={Math.ceil(res[1] * 100)}
             />
           ))}
         </S.AnimalContainer>

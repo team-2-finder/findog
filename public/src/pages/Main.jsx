@@ -60,15 +60,18 @@ const Main = () => {
       })
       .then((response) => {
         // 업로드 성공 후에 수행할 작업
+        // console.log(response);
         setLoading(false);
+
         setTimeout(() => {
-          navigate("/similarity");
+          navigate("/similarity", { state: { arr: response.data } });
         }, 2000);
+
       })
       .catch((error) => {
         // 업로드 실패 시에 수행할 작업
         setLoading(false);
-        console.error("Upload failed:", error);
+        console.error("어Upload failed:", error);
       });
   };
   return (
