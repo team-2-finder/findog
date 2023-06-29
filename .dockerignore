@@ -1,3 +1,5 @@
+ai/**/__pycache__/
+
 server/target/
 
 **/.vscode/
