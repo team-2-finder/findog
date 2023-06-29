@@ -32,7 +32,7 @@ async def startup():
     await Database.init()
     dogs = await get_all_paths()
     paths = [(dog.image_path, dog.desertion_no) for dog in dogs]
-    images = get_crops([f"../server/{dog.image_path}" for dog in dogs])
+    images = get_crops([dog.image_path for dog in dogs])
 
     for (path, key) in paths:
         path = "".join(path.split(".")[:-1])
