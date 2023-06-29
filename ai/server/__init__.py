@@ -2,10 +2,13 @@ import os
 import requests
 def download():
     pt_url = 'https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt'
-    cache_dir = os.path.expanduser('/tmp/clip')
+    cache_dir = os.path.expanduser('/model/clip')
     os.makedirs(cache_dir, exist_ok=True)
 
     file_path = os.path.join(cache_dir, 'ViT-B-32.pt')
+
+    if os.path.exists(file_path):
+        return
 
     response = requests.get(pt_url, verify=False)
     with open(file_path, 'wb') as file:

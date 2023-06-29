@@ -8,7 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import os
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model, preprocess = clip.load('/tmp/clip/ViT-B-32.pt')
+model, preprocess = clip.load('/model/clip/ViT-B-32.pt')
 
 from PIL import Image
 def convert2pill(image):

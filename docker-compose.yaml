@@ -26,6 +26,7 @@ services:
       SQL_HOST: "postgresql:5432"
     volumes:
       - server:/data
+      - path:/model
     depends_on:
       - postgresql
     mem_limit: "30g"
