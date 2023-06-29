@@ -9,7 +9,7 @@ import cv2
 app = FastAPI(root_path="/ai")
 
 mask_paths = []
-batch_size = 1000
+batch_size = 10
 pre_imgs = []
 
 async def get_all_paths() -> list[model.Dogs]:
@@ -28,9 +28,11 @@ async def read_item(path: str):
         try:
             acc = get_hist_acc(img, img_ipt)
             res.append({"acc": acc, "key": key})
-        except:
+        except Exception as e:
+            print(e)
             continue
     res = sorted(res, key=lambda x: x["acc"], reverse=True)
+    print(res)
     return {"results": res}
 
 
@@ -51,7 +53,7 @@ async def startup():
 
         try:
             for ((path, key), image) in zip(paths_now, images):
-                path = "".join(path.split(".")[:-1])
+                path = ".".join(path.split(".")[:-1])
                 path = f"{path}-mask.jpg"
                 mask_paths.append((path, key))
                 Image.fromarray(image).save(path)
@@ -59,4 +61,5 @@ async def startup():
 
         except Exception as e:
             print(e)
+        break
         

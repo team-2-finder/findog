@@ -12,7 +12,6 @@ path = "src/main.rs"
 [dependencies]
 anyhow = "1.0"
 axum = { version = "0.6", features = ["multipart"] }
-base64 = "0.21.2"
 chrono = "0.4.26"
 dotenvy = "0.15.7"
 http = "0.2.9"
