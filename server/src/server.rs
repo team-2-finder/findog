@@ -15,6 +15,7 @@ use sqlx::postgres::{PgConnectOptions, PgPool, PgPoolOptions};
 use sqlx::{ConnectOptions, Pool, Postgres, QueryBuilder};
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
+use tower_http::services::ServeDir;
 
 use crate::api::fetch_dogs;
 use crate::entity::{Dogs, Filter};
@@ -59,9 +60,12 @@ async fn get_pool() -> Result<Pool<Postgres>> {
 }
 
 fn make_app(pool: Pool<Postgres>) -> Router {
+    let base_path = std::env::var("IMAGE_BASE").unwrap_or_else(|_| "./images".to_string());
+
     Router::new()
         .route("/", get(dogs))
         .route("/upload-image", post(search_image))
+        .nest_service("/image", ServeDir::new(base_path))
         .with_state(pool)
 }
 
