@@ -1,6 +1,7 @@
 import Header from "./Header";
 import MHeader from "./MHeader";
 import Loading from "./Loading";
+import Loading2 from "./Loading2";
 import { MainColor, DisableMain } from "./Colors";
 import AnimalCard from "./AnimalCard";
 import SimilarityCard from "./SimilarityCard";
@@ -14,6 +15,7 @@ export {
   MainColor,
   DisableMain,
   Loading,
+  Loading2,
   AnimalCard,
   SimilarityCard,
   MHeader,
