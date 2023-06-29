@@ -65,6 +65,10 @@ fn make_app(pool: Pool<Postgres>) -> Router {
     let base_path = std::env::var("IMAGE_BASE").unwrap_or_else(|_| "./images".to_string());
 
     Router::new()
+        .route("/", get(dogs))
+        .route("/upload-image", post(search_image))
+        .nest_service("/image", ServeDir::new(base_path))
+        .with_state(pool)
         .layer(
             CorsLayer::new()
                 .allow_methods(Any)
@@ -72,10 +76,6 @@ fn make_app(pool: Pool<Postgres>) -> Router {
                 .allow_headers([CONTENT_TYPE])
                 .allow_credentials(false)
         )
-        .route("/", get(dogs))
-        .route("/upload-image", post(search_image))
-        .nest_service("/image", ServeDir::new(base_path))
-        .with_state(pool)
 }
 
 fn setup_log() {
