@@ -7,10 +7,11 @@ from PIL import Image
 from fastapi import FastAPI
 import requests
 import cv2
-
+import os
 
 def download():
     pt_url = 'https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt'
+    os.makedirs('~/.cache/clip', exist_ok=True)
     with open('~/.cache/clip/vit-model.pt') as file:
         response = requests.get(pt_url)
         file.write(response.content)

@@ -9,7 +9,6 @@ import os
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-os.makedirs('~/.cache/clip', exist_ok=True)
 model, preprocess = clip.load('~/.cache/clip/vit-model.pt', device=device)
 
 from PIL import Image
