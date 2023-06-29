@@ -12,6 +12,7 @@ mask_paths = []
 batch_size = 1000
 pre_imgs = []
 
+
 async def get_all_paths() -> list[model.Dogs]:
     async with Database.async_session() as session:
         stmt = select(model.Dogs)
@@ -24,7 +25,7 @@ async def get_all_paths() -> list[model.Dogs]:
 async def read_item(path: str):
     res = []
     img_ipt = cv2.imread(path)
-    for (img, key) in pre_imgs:
+    for img, key in pre_imgs:
         try:
             acc = get_hist_acc(img, img_ipt)
             res.append({"acc": acc, "key": key})
@@ -52,7 +53,7 @@ async def startup():
         images = get_crops(image_paths_now)
 
         try:
-            for ((path, key), image) in zip(paths_now, images):
+            for (path, key), image in zip(paths_now, images):
                 path = ".".join(path.split(".")[:-1])
                 path = f"{path}-mask.jpg"
                 mask_paths.append((path, key))
@@ -61,4 +62,3 @@ async def startup():
 
         except Exception as e:
             print(e)
-        

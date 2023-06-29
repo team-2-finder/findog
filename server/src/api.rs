@@ -107,6 +107,5 @@ pub async fn fetch_dogs(pool: Pool<Postgres>) -> Result<()> {
 
     tracing::info!("done fetching dogs");
 
-
     Ok(())
 }

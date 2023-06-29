@@ -178,7 +178,7 @@ async fn search_image(
     let data = hashmap
         .get("image")
         .ok_or_else(|| internal_error(anyhow!("no image")))?;
-    let sha256 = format!("{:x}", sha2::Sha256::digest(&data));
+    let sha256 = format!("{:x}", sha2::Sha256::digest(data));
     let base_path = std::env::var("IMAGE_BASE").unwrap_or_else(|_| "./images".to_string());
     let base_path = format!("{base_path}/input");
     tokio::fs::create_dir_all(&base_path)
@@ -192,9 +192,7 @@ async fn search_image(
     let url = std::env::var("AI_URL").unwrap_or_else(|_| "http://ai:80".to_string());
     let url = format!("{url}/acc?path={path}");
 
-    let res = reqwest::get(url)
-        .await
-        .map_err(internal_error)?;
+    let res = reqwest::get(url).await.map_err(internal_error)?;
     let res = res.text().await.map_err(internal_error)?;
     let value: Value = serde_json::from_str(&res).map_err(internal_error)?;
     let value = value

@@ -1,5 +1,4 @@
 import torch
-import torchvision.transforms as T
 import torchvision.transforms.functional as F
 from torchvision.models.segmentation import fcn_resnet50, FCN_ResNet50_Weights
 from torchvision.io import read_image
@@ -82,7 +81,9 @@ def get_crops(paths):
                     masked_img[c] = np.where(
                         np_mask > 0.01, np_img[c], 0
                     )  # Apply the mask to the corresponding channel
-                np_masked = np.transpose(masked_img, (1, 2, 0))  # Convert shape to (H, W, C)
+                np_masked = np.transpose(
+                    masked_img, (1, 2, 0)
+                )  # Convert shape to (H, W, C)
 
                 masked_imgs.append(np_masked)
 
