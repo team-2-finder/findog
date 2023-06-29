@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
-import { Header, SimilarityCard, MHeader, MBottomNavBar } from "../components";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  Header,
+  SimilarityCard,
+  MHeader,
+  MBottomNavBar,
+  MainColor,
+} from "../components";
 import { bg2 } from "../images";
 import styled from "styled-components";
-import DetailModal from "../components/DetailModal";
+import { noItem, noItemText } from "../images";
 
 const Similarity = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const arr = location.state.arr;
   const isMobile = window.innerWidth <= 393;
 
@@ -20,22 +27,36 @@ const Similarity = () => {
           <br />
           강아지들을 찾아봤어요.
         </S.HeaderBox>
-        <S.AnimalContainer>
-          {arr.map((res, i) => (
-            <SimilarityCard
-              key={i}
-              date={res[0].happenDt}
-              kindCd={res[0].kindCd}
-              sexCd={res[0].sexCd}
-              neuterYn={res[0].neuterYn}
-              imgUrl={res[0].filename}
-              careNm={res[0].careNm}
-              careTel={res[0].careTel}
-              weight={res[0].weight}
-              similar={Math.ceil(res[1] * 100)}
-            />
-          ))}
-        </S.AnimalContainer>
+        {arr.length !== 0 ? (
+          <S.AnimalContainer>
+            {arr.map((res, i) => (
+              <SimilarityCard
+                key={i}
+                date={res[0].happenDt}
+                kindCd={res[0].kindCd}
+                sexCd={res[0].sexCd}
+                neuterYn={res[0].neuterYn}
+                imgUrl={res[0].filename}
+                careNm={res[0].careNm}
+                careTel={res[0].careTel}
+                weight={res[0].weight}
+                similar={Math.ceil(res[1] * 100)}
+              />
+            ))}
+          </S.AnimalContainer>
+        ) : (
+          <div style={{ width: "100%" }}>
+            <S.NoItem src={noItem} />
+            <S.NoItemText src={noItemText} />
+            <S.BackButton
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              돌아가기
+            </S.BackButton>
+          </div>
+        )}
       </S.Container>
       {isMobile && <MBottomNavBar />}
     </>
@@ -68,6 +89,34 @@ const S = {
     @media screen and (max-width: 393px) {
       grid-template-columns: 1fr;
     }
+  `,
+  NoItem: styled.img`
+    position: absolute;
+    top: 30%;
+    left: 35%;
+    width: 30%;
+    height: 30%;
+  `,
+  NoItemText: styled.img`
+    position: absolute;
+    top: 45%;
+    left: 35%;
+    width: 30%;
+    height: 30%;
+  `,
+  BackButton: styled.div`
+    width: 500px;
+    height: 50px;
+    position: absolute;
+    cursor: pointer;
+    top: 65%;
+    left: 34%;
+    color: white;
+    text-align: center;
+    padding-top: 15px;
+    font-size: 24px;
+    border-radius: 16px;
+    background-color: ${MainColor};
   `,
 };
 
