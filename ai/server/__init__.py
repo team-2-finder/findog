@@ -22,7 +22,7 @@ from sqlalchemy import select
 from server.utils.preprocess import get_crops
 from server.db import Database, model
 
-from server.utils.acc import get_ensemble_acc, get_all_transformer_acc
+from server.utils.acc import get_ensemble_acc, get_all_transformer_acc, get_hist_acc
 from PIL import Image
 from fastapi import FastAPI
 import cv2
@@ -46,19 +46,19 @@ async def read_item(path: str):
     res = []
     img_ipt = cv2.imread(path)
     
-    all_transformer_res = get_all_transformer_acc(img_ipt, pre_imgs)
-    print(all_transformer_res)
+    # all_transformer_res = get_all_transformer_acc(img_ipt, pre_imgs)
+    # print(all_transformer_res)
+
+    for img, key in pre_imgs:
+        try:
+            acc = get_ensemble_acc(img, img_ipt)
+            res.append({"acc": acc, "key": key})
+        except Exception as e:
+            print(e)
+            continue
+    res = sorted(res, key=lambda x: x["acc"], reverse=True)
     
-    # for img, key in pre_imgs:
-    #     try:
-    #         acc = get_ensemble_acc(img, img_ipt)
-    #         res.append({"acc": acc, "key": key})
-    #     except Exception as e:
-    #         print(e)
-    #         continue
-    # res = sorted(res, key=lambda x: x["acc"], reverse=True)
-    
-    return {"results": all_transformer_res}
+    return {"results": res}
 
 @app.on_event("startup")
 async def startup():
