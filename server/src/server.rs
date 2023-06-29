@@ -37,7 +37,7 @@ fn db_url() -> String {
 async fn get_pool() -> Result<Pool<Postgres>> {
     let db_connection_str = db_url();
     let mut option = PgConnectOptions::from_str(&db_connection_str)?;
-    option.log_statements(log::LevelFilter::Debug);
+    option.log_statements(log::LevelFilter::Trace);
 
     let retry_count = std::env::var("DB_RETRY")
         .unwrap_or_else(|_| "5".to_string())
@@ -80,7 +80,7 @@ fn make_app(pool: Pool<Postgres>) -> Router {
 
 fn setup_log() {
     tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::INFO)
+        .with_max_level(tracing::Level::TRACE)
         .init();
 }
 
