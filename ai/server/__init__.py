@@ -57,38 +57,6 @@ async def read_item(path: str):
     
     return {"results": res}
 
-@app.get("/acc")
-async def read_item(path: str):
-    res = []
-    img_ipt = cv2.imread(path)
-
-    all_transformer_res = get_all_transformer_acc(img_ipt, pre_imgs)
-    print(all_transformer_res)
-
-    acc_sum = {}
-    acc_count = {}
-
-    for item in all_transformer_res:
-        acc = item['acc']
-        key = item['key']
-
-        if key not in acc_sum:
-            acc_sum[key] = 0.0
-            acc_count[key] = 0
-
-        acc_sum[key] += acc
-        acc_count[key] += 1
-
-    for key in acc_sum:
-        avg_acc = acc_sum[key] / acc_count[key]
-        res.append({"acc": avg_acc, "key": key})
-
-    res = sorted(res, key=lambda x: x["acc"], reverse=True)
-    
-    return {"results": res}
-
-
-
 @app.on_event("startup")
 async def startup():
     global mask_paths
