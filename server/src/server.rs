@@ -189,9 +189,12 @@ async fn search_image(
     let image = data.as_slice();
     file.write_all(image).await.map_err(internal_error)?;
 
-    let url = std::env::var("AI_URL").unwrap_or_else(|_| "http://localhost:3030".to_string());
+    let url = std::env::var("AI_URL").unwrap_or_else(|_| "http://ai:80".to_string());
+    let url = format!("{url}/acc?path={path}");
 
-    let res = reqwest::get(format!("{url}/acc?path={path}"))
+    tracing::info!("url: {:?}", url);
+
+    let res = reqwest::get(url)
         .await
         .map_err(internal_error)?;
     let res = res.text().await.map_err(internal_error)?;
