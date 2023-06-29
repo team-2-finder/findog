@@ -1,7 +1,6 @@
 use std::sync::OnceLock;
 
 use anyhow::Result;
-use chrono::Utc;
 use reqwest::header::USER_AGENT;
 use reqwest::Response;
 use sqlx::types::JsonValue;
@@ -83,8 +82,10 @@ pub async fn fetch_dogs(pool: Pool<Postgres>) -> Result<()> {
 
     let tasks = dogs
         .iter()
+        .filter(|dog| dog.get("kindCd").unwrap().as_str().unwrap().contains('개'))
         .map(|dog| {
-            let dog = serde_json::from_value(dog.clone()).unwrap();
+            let mut dog: Dogs = serde_json::from_value(dog.clone()).unwrap();
+            dog.filename = dog.filename.replace("_s", "");
             let pool = pool.clone();
             let base_path = base_path.clone();
 
