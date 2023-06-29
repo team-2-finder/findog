@@ -1,12 +1,19 @@
+use std::collections::HashMap;
+use std::fmt::Display;
 use std::str::FromStr;
 use std::time::Duration;
 
-use anyhow::Result;
-use axum::extract::Query;
+use anyhow::{anyhow, Result};
+use axum::extract::{Multipart, Query};
 use axum::routing::post;
 use axum::{extract::State, http::StatusCode, routing::get, Json, Router};
+use base64::engine::general_purpose;
+use base64::Engine;
+use sha2::Digest;
 use sqlx::postgres::{PgConnectOptions, PgPool, PgPoolOptions};
 use sqlx::{ConnectOptions, Pool, Postgres, QueryBuilder};
+use tokio::fs::File;
+use tokio::io::AsyncWriteExt;
 
 use crate::api::fetch_dogs;
 use crate::entity::{Dogs, Filter};
@@ -133,16 +140,50 @@ async fn dogs(
         .map_err(internal_error)
 }
 
-async fn search_image(State(pool): State<PgPool>) -> Result<String, (StatusCode, String)> {
-    sqlx::query_scalar("select 'hello world from pg'")
-        .fetch_one(&pool)
+async fn search_image(mut multipart: Multipart) -> Result<String, (StatusCode, String)> {
+    let mut hashmap = HashMap::new();
+    while let Some(field) = multipart.next_field().await.unwrap() {
+        let name = field.name().unwrap().to_string();
+        let data = field.bytes().await.unwrap();
+
+        hashmap.insert(name, data.to_vec());
+    }
+
+    let ext = hashmap
+        .get("filename")
+        .cloned()
+        .unwrap_or_else(|| "example.jpg".as_bytes().to_vec());
+    let ext = String::from_utf8(ext).map_err(internal_error)?;
+    let ext = ext.split('.').last().unwrap_or("jpg");
+
+    let data = hashmap
+        .get("image")
+        .ok_or_else(|| internal_error(anyhow!("no image")))?;
+    let image = general_purpose::STANDARD
+        .decode(data)
+        .map_err(internal_error)?;
+    let sha256 = format!("{:x}", sha2::Sha256::digest(&image));
+    let base_path = std::env::var("IMAGE_BASE").unwrap_or_else(|_| "./images".to_string());
+    let base_path = format!("{base_path}/input");
+    tokio::fs::create_dir_all(&base_path)
         .await
-        .map_err(internal_error)
+        .map_err(internal_error)?;
+    let path = format!("{base_path}/{id}.{ext}", id = sha256);
+    let mut file = File::create(&path).await.map_err(internal_error)?;
+    let image = image.as_slice();
+    file.write_all(image).await.map_err(internal_error)?;
+
+    let url = std::env::var("AI_URL").unwrap_or_else(|_| "http://localhost:3030".to_string());
+
+    let res = reqwest::get(format!("{url}/acc?path={path}"))
+        .await
+        .map_err(internal_error)?;
+    res.text().await.map_err(internal_error)
 }
 
 fn internal_error<E>(err: E) -> (StatusCode, String)
 where
-    E: std::error::Error,
+    E: Display,
 {
     (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
 }
