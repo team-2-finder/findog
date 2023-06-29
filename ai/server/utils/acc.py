@@ -82,7 +82,7 @@ def get_transformer_acc(image1, image2):
     
 
 def get_all_transformer_acc(reference_image, candidate_images):
-    eference_embedding = get_image_embedding(reference_image)
+    reference_embedding = get_image_embedding(reference_image)
 
     candidate_embeddings = []
     for candidate_image in candidate_images:
@@ -97,14 +97,7 @@ def get_all_transformer_acc(reference_image, candidate_images):
     sorted_percent_similarities = percent_similarities[0][sorted_indices]
 
     sorted_maps = [{'acc': sorted_percent_similarities[i], 'key': candidate_images[indice_index]} for i, indice_index in enumerate(sorted_indices)]
-
-    print(sorted_maps)
-    for m in sorted_maps:
-        print(m['acc'])
     
-    # for i, index in enumerate(sorted_indices):
-    #     print(f"Rank {i+1}: (Similarity: {sorted_percent_similarities[i]})")
-        
     return sorted_maps
 
 def get_ensemble_acc(image1, image2):
