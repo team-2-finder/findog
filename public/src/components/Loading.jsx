@@ -22,15 +22,14 @@ const S = {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: 100vw;
-    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
     z-index: 100;
   `,
   SubArea: styled.div`
-    background-color: white;
     border-radius: 20px;
-    width: 50%;
-    display: absolute;
+    width: 500px;
+    /* height: 200px; */
     @media screen and (max-width: 393px) {
       width: 100%;
     }
@@ -38,7 +37,6 @@ const S = {
   Row: styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     background-color: white;
     border-radius: 20px;
@@ -47,7 +45,7 @@ const S = {
 
   InnerText: styled.p`
     margin: 0;
-    padding-top: 75px;
+    padding-top: 24px;
     font-weight: bold;
     font-size: 24px;
     @media screen and (max-width: 393px) {
@@ -56,7 +54,7 @@ const S = {
     }
   `,
   img: styled.img`
-    width: 50%;
+    width: 80%;
   `,
 };
 
