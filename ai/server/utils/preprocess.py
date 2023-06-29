@@ -40,7 +40,7 @@ def get_crops(paths):
                 min_width = min(min_width, dog_int.shape[2])
                 dog_list.append(dog_int)
                 cnt += 1
-                if cnt == 50:
+                if cnt == 200:
                     break
             except:
                 pass
