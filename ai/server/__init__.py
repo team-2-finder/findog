@@ -4,11 +4,13 @@ from server.db import Database, model
 from server.utils.acc import get_hist_acc
 from PIL import Image
 from fastapi import FastAPI
+import cv2
 
 app = FastAPI(root_path="/ai")
 
 mask_paths = []
 batch_size = 1000
+pre_imgs = []
 
 async def get_all_paths() -> list[model.Dogs]:
     async with Database.async_session() as session:
@@ -21,7 +23,7 @@ async def get_all_paths() -> list[model.Dogs]:
 @app.get("/acc")
 async def read_item(path: str):
     res = []
-    for (img, key) in mask_paths:
+    for (img, key) in pre_imgs:
         try:
             acc = get_hist_acc(img, path)
             res.append({"acc": acc, "key": key})
@@ -33,9 +35,9 @@ async def read_item(path: str):
 
 @app.on_event("startup")
 async def startup():
-    import gc
-
     global mask_paths
+    global pre_imgs
+
     await Database.init()
     dogs = await get_all_paths()
     paths = [(dog.image_path, dog.desertion_no) for dog in dogs]
@@ -52,7 +54,8 @@ async def startup():
                 path = f"{path}-mask.jpg"
                 mask_paths.append((path, key))
                 Image.fromarray(image).save(path)
+                pre_imgs.append((cv2.imread(path), key))
+
         except Exception as e:
             print(e)
         
-        gc.collect()
