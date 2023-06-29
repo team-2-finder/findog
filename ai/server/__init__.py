@@ -11,12 +11,14 @@ import os
 
 def download():
     pt_url = 'https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt'
-    os.makedirs('~/.cache/clip', exist_ok=True)
-    with open('~/.cache/clip/vit-model.pt') as file:
-        response = requests.get(pt_url)
+    cache_dir = os.path.expanduser('~/.cache/clip')
+    os.makedirs(cache_dir, exist_ok=True)
+
+    file_path = os.path.join(cache_dir, 'ViT-B-32.pt')
+
+    response = requests.get(pt_url)
+    with open(file_path, 'wb') as file:
         file.write(response.content)
-        
-        
         
 app = FastAPI(root_path="/ai")
 download()
