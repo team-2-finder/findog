@@ -23,6 +23,7 @@ services:
       - server:/data
     depends_on:
       - postgresql
+    mem_limit: "30g"
 
   server:
     build:
