@@ -32,12 +32,16 @@ def get_crops(paths):
         min_height = min_width = 1e9
 
         dog_list = []
+        cnt = 0
         for path in paths:
             try:
                 dog_int = read_image(path)
                 min_height = min(min_height, dog_int.shape[1])
                 min_width = min(min_width, dog_int.shape[2])
                 dog_list.append(dog_int)
+                cnt += 1
+                if cnt == 50:
+                    break
             except:
                 pass
 
