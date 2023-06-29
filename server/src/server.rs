@@ -203,6 +203,8 @@ async fn search_image(
         .ok_or_else(|| internal_error(anyhow!("no array")))?
         .clone();
 
+    tracing::info!("value: {:?}", value);
+
     value.sort_by(|a, b| {
         let a = a.get("acc").unwrap().as_f64().unwrap();
         let b = b.get("acc").unwrap().as_f64().unwrap();
