@@ -9,7 +9,7 @@ import cv2
 app = FastAPI(root_path="/ai")
 
 mask_paths = []
-batch_size = 10
+batch_size = 1000
 pre_imgs = []
 
 async def get_all_paths() -> list[model.Dogs]:
@@ -61,5 +61,4 @@ async def startup():
 
         except Exception as e:
             print(e)
-        break
         

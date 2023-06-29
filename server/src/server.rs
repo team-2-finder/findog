@@ -97,12 +97,12 @@ pub async fn serve() -> Result<()> {
         .await
         .expect("Failed to create table");
 
-    // let pool_clone = pool.clone();
-    // tokio::spawn(async move {
-    //     if let Err(e) = fetch_dogs(pool_clone).await {
-    //         tracing::error!("Failed to fetch dogs: {}", e);
-    //     }
-    // });
+    let pool_clone = pool.clone();
+    tokio::spawn(async move {
+        if let Err(e) = fetch_dogs(pool_clone).await {
+            tracing::error!("Failed to fetch dogs: {}", e);
+        }
+    });
 
     let app = make_app(pool);
 
@@ -192,13 +192,10 @@ async fn search_image(
     let url = std::env::var("AI_URL").unwrap_or_else(|_| "http://ai:80".to_string());
     let url = format!("{url}/acc?path={path}");
 
-    tracing::info!("url: {:?}", url);
-
     let res = reqwest::get(url)
         .await
         .map_err(internal_error)?;
     let res = res.text().await.map_err(internal_error)?;
-    tracing::info!("res: {:?}", res);
     let value: Value = serde_json::from_str(&res).map_err(internal_error)?;
     let value = value
         .get("results")
