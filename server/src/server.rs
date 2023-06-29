@@ -68,7 +68,8 @@ fn make_app(pool: Pool<Postgres>) -> Router {
         .layer(
             CorsLayer::new()
                 .allow_methods([Method::GET, Method::POST])
-                .allow_origin(Any),
+                .allow_origin(Any)
+                .allow_credentials(true),
         )
         .route("/", get(dogs))
         .route("/upload-image", post(search_image))
