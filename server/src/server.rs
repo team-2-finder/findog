@@ -69,6 +69,7 @@ fn make_app(pool: Pool<Postgres>) -> Router {
                 .allow_methods(Any)
                 .allow_origin(Any)
                 .allow_headers(Any)
+                .allow_credentials(false)
         )
         .route("/", get(dogs))
         .route("/upload-image", post(search_image))
