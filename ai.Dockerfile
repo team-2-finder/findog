@@ -11,4 +11,4 @@ RUN poetry install --no-dev --no-interaction --no-ansi --no-cache
 
 COPY ai/ ./
 
-CMD ["poetry", "run", "uvicorn", "ai:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["poetry", "run", "uvicorn", "server:app", "--host", "0.0.0.0", "--port", "80"]
